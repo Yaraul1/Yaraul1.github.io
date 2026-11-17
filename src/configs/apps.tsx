@@ -19,8 +19,8 @@ const apps: AppsData[] = [
     title: "Проекты",
     desktop: true,
     img: "/icons/projects.png",
-    width: 800,
-    height: 550,
+    width: 1120,
+    height: 700,
     x: 25,
     y: 0,
     content: <Projects />

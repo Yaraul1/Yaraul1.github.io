@@ -1,4 +1,5 @@
 import { portfolio, openPortfolioApp } from "~/configs/portfolio";
+import LegalHubCase from "~/components/legalhub/LegalHubCase";
 
 export function Profile() {
   return (
@@ -53,6 +54,10 @@ export function Profile() {
 }
 
 export function Projects() {
+  const [caseOpen, setCaseOpen] = useState(
+    new URLSearchParams(window.location.search).get("project") === "legalhub"
+  );
+  if (caseOpen) return <LegalHubCase onBack={() => setCaseOpen(false)} />;
   return (
     <main className="projects-app app-scroll">
       <div className="app-heading">
@@ -63,7 +68,8 @@ export function Projects() {
           </h2>
         </div>
         <span className="file-count">
-          {String(portfolio.projects.length).padStart(2, "0")} проектов
+          {String(portfolio.projects.length).padStart(2, "0")}{" "}
+          {portfolio.projects.length === 1 ? "проект" : "проектов"}
         </span>
       </div>
       {portfolio.projects.length ? (
@@ -81,6 +87,14 @@ export function Projects() {
                 ))}
               </div>
               <div className="project-links">
+                {p.demo === "legalhub" && (
+                  <button
+                    className="primary-action project-demo-action"
+                    onClick={() => setCaseOpen(true)}
+                  >
+                    Открыть интерактивный кейс <span>↗</span>
+                  </button>
+                )}
                 {p.url && (
                   <a href={p.url} target="_blank" rel="noreferrer">
                     Открыть ↗

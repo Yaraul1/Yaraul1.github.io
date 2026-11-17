@@ -4,10 +4,14 @@ import { minMarginY } from "~/utils";
 import AppWindow from "~/components/AppWindow";
 import Dock from "~/components/dock/Dock";
 export default function Desktop() {
-  const [opened, setOpened] = useState<Record<string, boolean>>({ profile: true });
+  const initialApp =
+    new URLSearchParams(window.location.search).get("project") === "legalhub"
+      ? "projects"
+      : "profile";
+  const [opened, setOpened] = useState<Record<string, boolean>>({ [initialApp]: true });
   const [minimized, setMinimized] = useState<Record<string, boolean>>({});
   const [maximized, setMaximized] = useState<Record<string, boolean>>({});
-  const [order, setOrder] = useState(["profile"]);
+  const [order, setOrder] = useState([initialApp]);
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState("");
   const [date, setDate] = useState(new Date());
