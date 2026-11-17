@@ -68,7 +68,7 @@ export default function Desktop() {
         </div>
         <div className="topbar-right">
           <span className="system-indicator">
-            <span className="live-dot" /> SYSTEM ONLINE
+            <span className="live-dot" /> Yaroslav Yuferev
           </span>
           <button
             className="search-trigger"
@@ -114,13 +114,6 @@ export default function Desktop() {
           </div>
         </>
       )}
-      <div className="wallpaper-type" aria-hidden="true">
-        <span>PERSONAL OPERATING SYSTEM</span>
-        <div>
-          yar<span>_</span>os
-        </div>
-        <p>YAROSLAV YUFEREV / AI ENGINEER</p>
-      </div>
       <nav className="desktop-shortcuts" aria-label="Приложения рабочего стола">
         {apps
           .filter((a) => a.id !== "terminal")
@@ -131,10 +124,6 @@ export default function Desktop() {
             </button>
           ))}
       </nav>
-      <div className="desktop-caption">
-        <span>EXPLORE. BUILD. REPEAT.</span>
-        <span>Личное пространство в интернете.</span>
-      </div>
       <div className="window-bound z-10 absolute" style={{ top: minMarginY }}>
         {apps.map(
           (app) =>
@@ -178,7 +167,7 @@ export default function Desktop() {
       />
       <footer className="desktop-credit">
         YY © {date.getFullYear()}
-        <button onClick={() => openPortfolioApp("readme")}>ABOUT THIS SPACE ↗</button>
+        <button onClick={() => openPortfolioApp("readme")}>Об этом сайте</button>
       </footer>
       {search && (
         <div className="search-overlay" onClick={() => setSearch(false)}>

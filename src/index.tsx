@@ -22,7 +22,7 @@ function App() {
           <div>
             yar<span>_</span>os
           </div>
-          <p>INITIALIZING PERSONAL SPACE</p>
+          <p>Добро пожаловать</p>
           <span className="boot-progress" />
         </div>
       )}

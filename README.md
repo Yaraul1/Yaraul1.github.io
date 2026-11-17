@@ -35,7 +35,9 @@ pnpm dev
 ```
 
 Проекты и контакты пока не заполнены: вымышленных работ и ссылок в интерфейсе нет.
-Иконки и цвета — `public/icons/` и `src/styles/portfolio.css`. Приложения — `src/configs/apps.tsx`.
+Оформление использует системный шрифт macOS (San Francisco), оригинальные иконки Apple и обои Mac Purple. Источники перечислены в `public/ASSETS.md`.
+
+Иконки, обои и цвета — `public/icons/`, `public/wallpapers/` и `src/styles/portfolio.css`. Приложения — `src/configs/apps.tsx`.
 
 ## Возможности
 

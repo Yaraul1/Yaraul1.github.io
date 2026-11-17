@@ -4,37 +4,29 @@ export function Profile() {
   return (
     <main className="profile-app app-scroll">
       <aside className="profile-sidebar">
-        <div className="monogram">
-          YY<span>↗</span>
-        </div>
-        <p className="sidebar-label">PERSONAL SPACE</p>
+        <div className="monogram">YY</div>
+        <p className="sidebar-label">Портфолио</p>
         <button className="sidebar-item selected">
-          ◉ <span>Обо мне</span>
-          <span>01</span>
+          <img src="/icons/profile.png" alt="" /> <span>Обо мне</span>
         </button>
         <button className="sidebar-item" onClick={() => openPortfolioApp("projects")}>
-          ▤ <span>Проекты</span>
-          <span>02</span>
+          <img src="/icons/projects.png" alt="" /> <span>Проекты</span>
         </button>
         <button className="sidebar-item" onClick={() => openPortfolioApp("contact")}>
-          ↗ <span>Контакты</span>
-          <span>03</span>
+          <img src="/icons/contact.png" alt="" /> <span>Контакты</span>
         </button>
         <div className="sidebar-bottom">
-          <span className="live-dot" /> YAR OS / v1.0
+          Yar OS
           <br />
-          <span>Сделано с любопытством.</span>
+          <span>Yaroslav Yuferev</span>
         </div>
       </aside>
       <section className="profile-main">
-        <div className="eyebrow">
-          <span className="orange-dot" /> HELLO, WORLD.
-        </div>
+        <div className="eyebrow">Привет, я Ярослав</div>
         <h1>
           Yaroslav
           <br />
           <span>Yuferev</span>
-          <sup aria-hidden="true">✳</sup>
         </h1>
         <div className="role-line">
           <span>{portfolio.role}</span>
@@ -50,7 +42,7 @@ export function Profile() {
           </button>
         </div>
         <div className="profile-footer">
-          <span>ЧЕЛОВЕК ЗА ИНТЕРФЕЙСОМ</span>
+          <span>Рад знакомству</span>
           <button onClick={() => openPortfolioApp("terminal")}>
             Попробуй терминал <span>⌘</span>
           </button>
@@ -65,13 +57,13 @@ export function Projects() {
     <main className="projects-app app-scroll">
       <div className="app-heading">
         <div>
-          <div className="eyebrow">SELECTED WORK</div>
+          <div className="eyebrow">Мои работы</div>
           <h2>
             Проекты<span className="accent">.</span>
           </h2>
         </div>
         <span className="file-count">
-          {String(portfolio.projects.length).padStart(2, "0")} FILES
+          {String(portfolio.projects.length).padStart(2, "0")} проектов
         </span>
       </div>
       {portfolio.projects.length ? (
@@ -105,19 +97,17 @@ export function Projects() {
         </div>
       ) : (
         <div className="empty-projects">
-          <div className="folder-art">
-            <span>↗</span>
-          </div>
-          <h3>Здесь скоро будет работа.</h3>
+          <img className="projects-folder" src="/icons/projects.png" alt="" />
+          <h3>Проекты появятся здесь</h3>
           <p>
             Раздел готовится. Скоро здесь появятся проекты,
             <br className="desktop-break" /> их истории и то, что получилось в итоге.
           </p>
-          <span className="small-label">WORK IN PROGRESS / STAY CURIOUS</span>
+          <span className="small-label">Раздел ещё заполняется</span>
         </div>
       )}
       <div className="section-bottom">
-        <span>YAROSLAV YUFEREV</span>
+        <span>Yaroslav Yuferev</span>
         <button onClick={() => openPortfolioApp("contact")}>
           Продолжим знакомство ↗
         </button>
@@ -149,7 +139,7 @@ export function Contact() {
   };
   return (
     <main className="contact-app app-scroll">
-      <div className="eyebrow">LET’S CONNECT</div>
+      <div className="eyebrow">Контакты</div>
       <h2>
         Всё начинается
         <br />с «привет»<span className="accent">.</span>
@@ -201,7 +191,7 @@ export function Contact() {
 export function Readme() {
   return (
     <main className="readme-app app-scroll">
-      <div className="eyebrow">README.MD</div>
+      <div className="eyebrow">Об этом сайте</div>
       <h2>
         Небольшая ОС.
         <br />
