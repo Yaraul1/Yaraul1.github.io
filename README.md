@@ -1,63 +1,57 @@
-# playground-macos
+# Yar OS
 
-My portfolio website simulating macOS's GUI: https://portfolio.zxh.me
+Персональное портфолио **Yaroslav Yuferev · AI Engineer** в формате рабочего стола.
+Основа — [Renovamen/playground-macos](https://github.com/Renovamen/playground-macos), MIT. Авторская лицензия сохранена в `LICENSE`.
 
-Powered by [React](https://reactjs.org/) + [Zustand](https://zustand-demo.pmnd.rs/) + [UnoCSS](https://uno.antfu.me/) + [TypeScript](https://www.typescriptlang.org/) + [Vite](https://vitejs.dev/).
+## Запуск
 
-![light mode](./public/screenshots/light.png)
-![dark mode](./public/screenshots/dark.png)
+Требуются Node.js и pnpm (версия указана в `package.json`).
 
-
-&nbsp;
-
-## Usage
-
-Clone the repo and install dependencies:
-
-```bash
+```sh
 pnpm install
-```
-
-Start dev server (with hot reloading):
-
-```bash
 pnpm dev
 ```
 
-Build for production with minification to the `dist` folder:
+## Содержание
 
-```bash
-pnpm build
+Данные редактируются в **`src/configs/portfolio.ts`**:
+
+- `name`, `role`, `bio` — профиль;
+- `email` — адрес электронной почты;
+- `github`, `telegram` — полные ссылки с `https://`;
+- `projects` — список проектов; пустой список показывает состояние «раздел готовится».
+
+Пример структуры проекта (демонстрационные данные, заменить реальными):
+
+```ts
+{
+  title: "Название проекта",
+  category: "AI / AUTOMATION",
+  description: "Задача, твоя роль и результат.",
+  tags: ["Python", "React"],
+  url: "https://example.com",
+  source: "https://github.com/your-account/project"
+}
 ```
 
+Проекты и контакты пока не заполнены: вымышленных работ и ссылок в интерфейсе нет.
+Иконки и цвета — `public/icons/` и `src/styles/portfolio.css`. Приложения — `src/configs/apps.tsx`.
 
-&nbsp;
+## Возможности
 
-## Changelog
+- Открытие, перемещение, изменение размера, сворачивание и закрытие окон.
+- Док с увеличением иконок, ярлыки рабочего стола и поиск (`⌘/Ctrl + K`).
+- Терминал: `help`, `about`, `whoami`, `projects`, `contact`, `open`, `ls`, `pwd`, `date`, `echo`, `clear`; история через стрелки.
+- Мобильная компоновка с окнами на ширину экрана.
+- Короткая загрузка при первом посещении за сессию; поддержка reduced motion.
+- Аналитика и внешние медиа исходного шаблона удалены.
 
-- **Update 2023.06.26**: Improve [FaceTime](https://support.apple.com/en-us/HT208176).
+## Проверка и сборка
 
-- **Update 2023.06.25**: Add [Typora](https://typora.io/), built on top of [Milkdown](https://milkdown.dev/).
+```sh
+pnpm typecheck
+pnpm build
+pnpm serve
+```
 
-- **Update 2021.12.05**: Simulated the device's actual battery state using [Battery API](https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API), displaying 100% charge on [unsupported browsers](https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API#browser_compatibility).
-
-- **Update 2021.12.05**: Refactored for cleaner code by utilizing functional components and hooks. Refer to [this branch](https://github.com/Renovamen/playground-macos/tree/class-component) for the previous version implemented with class components.
-
-
-&nbsp;
-
-## Credits
-
-- macOS
-  - [Monterey](https://www.apple.com/macos/monterey/)
-  - [Catalina](https://www.apple.com/bw/macos/catalina/)
-- [macOS Icon Gallery](https://www.macosicongallery.com/)
-- [sindresorhus/file-icon-cli](https://github.com/sindresorhus/file-icon-cli)
-- [vivek9patel.github.io](https://github.com/vivek9patel/vivek9patel.github.io)
-
-
-&nbsp;
-
-## License
-
-[MIT](MIT)
+Результат — статическая папка `dist/`. Для хостинга можно использовать Sites, Vercel, Netlify или любой статический сервер. Настройки Sites сохранены в `.openai/hosting.json`.

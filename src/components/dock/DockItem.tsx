@@ -94,11 +94,7 @@ export default function DockItem({
   const { winWidth } = useWindowSize();
 
   return (
-    <li
-      id={`dock-${id}`}
-      onClick={desktop || id === "launchpad" ? () => openApp(id) : () => {}}
-      className="relative flex flex-col justify-end mb-1"
-    >
+    <li id={`dock-${id}`} className="relative flex flex-col justify-end mb-1">
       <p
         className="tooltip absolute inset-x-0 mx-auto w-max rounded-md bg-c-300/80"
         p="x-3 y-1"
@@ -118,14 +114,16 @@ export default function DockItem({
           />
         </a>
       ) : (
-        <motion.img
-          ref={imgRef}
-          src={img}
-          alt={title}
-          title={title}
-          draggable={false}
-          style={winWidth < 640 ? {} : { width, willChange: "width" }}
-        />
+        <button aria-label={`Открыть: ${title}`} onClick={() => openApp(id)}>
+          <motion.img
+            ref={imgRef}
+            src={img}
+            alt={title}
+            title={title}
+            draggable={false}
+            style={winWidth < 640 ? {} : { width, willChange: "width" }}
+          />
+        </button>
       )}
       <div
         className={`size-1 mx-auto rounded-full bg-c-800 ${isOpen ? "" : "invisible"}`}

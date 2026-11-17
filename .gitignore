@@ -3,3 +3,6 @@
 .cache/
 node_modules/
 dist/
+
+.sites-runtime/
+.sites-checkout/

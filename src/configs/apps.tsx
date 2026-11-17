@@ -1,84 +1,62 @@
-import { appBarHeight } from "~/utils";
 import type { AppsData } from "~/types";
-
+import { Profile, Projects, Contact, Readme } from "~/components/apps/Portfolio";
+import Terminal from "~/components/apps/Terminal";
 const apps: AppsData[] = [
   {
-    id: "launchpad",
-    title: "Launchpad",
-    desktop: false,
-    img: "img/icons/launchpad.png"
-  },
-  {
-    id: "bear",
-    title: "Bear",
+    id: "profile",
+    title: "Обо мне",
     desktop: true,
-    width: 860,
-    height: 500,
-    show: true,
-    y: -40,
-    img: "img/icons/bear.png",
-    content: <Bear />
-  },
-  {
-    id: "typora",
-    title: "Typora",
-    desktop: true,
-    width: 600,
-    height: 580,
-    y: -20,
-    img: "img/icons/typora.png",
-    content: <Typora />
-  },
-  {
-    id: "safari",
-    title: "Safari",
-    desktop: true,
-    width: 1024,
-    minWidth: 375,
-    minHeight: 200,
-    x: -20,
-    img: "img/icons/safari.png",
-    content: <Safari />
-  },
-  {
-    id: "vscode",
-    title: "VSCode",
-    desktop: true,
+    img: "/icons/profile.svg",
     width: 900,
-    height: 600,
-    x: 80,
-    y: -30,
-    img: "img/icons/vscode.png",
-    content: <VSCode />
+    height: 562,
+    show: true,
+    x: -40,
+    y: -10,
+    content: <Profile />
   },
   {
-    id: "facetime",
-    title: "FaceTime",
+    id: "projects",
+    title: "Проекты",
     desktop: true,
-    img: "img/icons/facetime.png",
-    width: 500 * 1.7,
-    height: 500 + appBarHeight,
-    minWidth: 350 * 1.7,
-    minHeight: 350 + appBarHeight,
-    aspectRatio: 1.7,
-    x: -80,
-    y: 20,
-    content: <FaceTime />
+    img: "/icons/projects.svg",
+    width: 800,
+    height: 550,
+    x: 25,
+    y: 0,
+    content: <Projects />
   },
   {
     id: "terminal",
-    title: "Terminal",
+    title: "Терминал",
     desktop: true,
-    img: "img/icons/terminal.png",
+    img: "/icons/terminal.svg",
+    width: 700,
+    height: 440,
+    x: 40,
+    y: 20,
     content: <Terminal />
   },
   {
-    id: "github",
-    title: "Github",
-    desktop: false,
-    img: "img/icons/github.png",
-    link: "https://github.com/Renovamen/playground-macos"
+    id: "contact",
+    title: "Контакты",
+    desktop: true,
+    img: "/icons/contact.svg",
+    width: 620,
+    height: 560,
+    x: 70,
+    y: 0,
+    content: <Contact />
+  },
+  {
+    id: "readme",
+    title: "Об этой ОС",
+    desktop: true,
+    img: "/icons/readme.svg",
+    width: 640,
+    height: 530,
+    x: 0,
+    y: 0,
+    content: <Readme />
   }
 ];
-
 export default apps;
