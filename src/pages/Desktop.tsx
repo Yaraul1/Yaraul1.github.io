@@ -103,6 +103,16 @@ export default function Desktop() {
             >
               Об этой ОС <span>↗</span>
             </button>
+            {new URLSearchParams(window.location.search).get("desktop") !== "1" && (
+              <button
+                onClick={() => {
+                  setMenu(false);
+                  window.dispatchEvent(new Event("yar:desk"));
+                }}
+              >
+                Вернуться к MacBook <span>↖</span>
+              </button>
+            )}
             <button
               onClick={() => {
                 setOpened({});

@@ -11,6 +11,7 @@ declare global {
   const Bear: typeof import('./components/apps/Bear')['default']
   const Contact: typeof import('./components/apps/Portfolio')['Contact']
   const ControlCenterMenu: typeof import('./components/menus/ControlCenterMenu')['default']
+  const DeskScene: typeof import('./components/DeskScene')['default']
   const Dock: typeof import('./components/dock/Dock')['default']
   const DockItem: typeof import('./components/dock/DockItem')['default']
   const FaceTime: typeof import('./components/apps/FaceTime')['default']

@@ -1,36 +1,12 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import Desktop from "~/pages/Desktop";
+import Workspace from "~/pages/Workspace";
 import "@unocss/reset/tailwind.css";
 import "uno.css";
 import "~/styles/index.css";
 import "~/styles/portfolio.css";
-function App() {
-  const [booting, setBooting] = useState(() => !sessionStorage.getItem("yar-visited"));
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setBooting(false);
-      sessionStorage.setItem("yar-visited", "1");
-    }, 1100);
-    return () => clearTimeout(timer);
-  }, []);
-  return (
-    <>
-      <Desktop />
-      {booting && (
-        <div className="yar-boot" role="status">
-          <div>
-            yar<span>_</span>os
-          </div>
-          <p>Добро пожаловать</p>
-          <span className="boot-progress" />
-        </div>
-      )}
-    </>
-  );
-}
+const screenPreview = new URLSearchParams(window.location.search).get("desktop") === "1";
 createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <React.StrictMode>{screenPreview ? <Desktop /> : <Workspace />}</React.StrictMode>
 );
