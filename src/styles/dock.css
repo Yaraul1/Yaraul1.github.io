@@ -1,0 +1,153 @@
+.yar-dock {
+  position: fixed;
+  z-index: 80;
+  left: 50%;
+  bottom: 27px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 28px);
+  overflow: visible;
+}
+.yar-dock ul {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  height: 84px;
+  padding: 8px 12px 4px;
+  margin: 0;
+  list-style: none;
+  background: #f6f5ff55;
+  border: 1px solid #ffffff8c;
+  border-radius: 23px;
+  box-shadow:
+    0 8px 32px #20234430,
+    inset 0 1px 1px #fff9;
+  backdrop-filter: blur(28px) saturate(1.4);
+  overflow: visible;
+}
+.yar-dock-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: none;
+  overflow: visible;
+}
+.yar-dock-item > a,
+.yar-dock-item > button {
+  display: block;
+  position: relative;
+  z-index: 1;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 3px;
+  border-radius: 18px;
+  line-height: 0;
+}
+.yar-dock-item img {
+  display: block;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 3px #15234930);
+  will-change: transform;
+  user-select: none;
+}
+.yar-dock-tooltip {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: auto;
+  bottom: calc(100% + 21px);
+  transform: translate(-50%, 4px);
+  white-space: nowrap;
+  padding: 8px 14px;
+  background: #fffffff0;
+  border: 1px solid #ffffffdc;
+  border-radius: 9px;
+  box-shadow: 0 4px 16px #23294426;
+  font: 13px/1.25 var(--font-ui, -apple-system, sans-serif);
+  font-weight: 500;
+  color: #34343d;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.13s,
+    transform 0.13s,
+    visibility 0.13s;
+}
+.yar-dock-tooltip:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 9px;
+  height: 9px;
+  background: #fffffff0;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0 0 2px;
+}
+.yar-dock-item:hover .yar-dock-tooltip,
+.yar-dock-item.is-focused .yar-dock-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+.yar-dock-indicator {
+  width: 4px;
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  box-shadow: 0 1px 2px #3333;
+}
+.yar-dock-indicator.is-open {
+  opacity: 0.95;
+}
+.yar-dock-hidden {
+  pointer-events: none;
+  opacity: 0;
+}
+@media (max-width: 639px) {
+  .yar-dock {
+    bottom: 28px;
+    max-width: calc(100vw - 20px);
+  }
+  .yar-dock ul {
+    gap: 4px;
+    height: 72px;
+    padding: 6px 9px 4px;
+    border-radius: 20px;
+  }
+  .yar-dock-item > a,
+  .yar-dock-item > button {
+    border-radius: 15px;
+  }
+  .yar-dock-tooltip {
+    font-size: 12px;
+    bottom: calc(100% + 11px);
+    padding: 7px 11px;
+  }
+}
+@media (hover: none) {
+  .yar-dock-item:hover .yar-dock-tooltip {
+    visibility: hidden;
+    opacity: 0;
+  }
+  .yar-dock-item.is-focused .yar-dock-tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yar-dock-tooltip {
+    transition: none;
+  }
+  .yar-dock-item img {
+    will-change: auto;
+  }
+}

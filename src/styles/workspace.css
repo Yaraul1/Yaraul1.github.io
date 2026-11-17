@@ -160,14 +160,6 @@
   user-select: none;
   background: #29233d;
 }
-.macbook-display iframe {
-  display: block;
-  width: 1024px;
-  height: 664px;
-  border: 0;
-  pointer-events: none;
-  background: #7874db;
-}
 .macbook-display > button {
   position: absolute;
   inset: 0;
@@ -333,4 +325,195 @@
   .workspace-footer {
     transition: none;
   }
+}
+/* The laptop display is rendered locally, without an embedded page. */
+.screen-preview {
+  position: relative;
+  width: 1024px;
+  height: 664px;
+  overflow: hidden;
+  background: #777b96 url("/wallpapers/macos-27-golden-gate.jpg") center/cover;
+  font-family: var(--font-ui);
+  color: #33333b;
+}
+.screen-preview-menubar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 30px;
+  padding: 0 17px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff4d;
+  backdrop-filter: blur(12px);
+  font-size: 11px;
+  color: #33353e;
+}
+.screen-preview-menubar b {
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 14px;
+}
+.screen-preview-menubar > span > span {
+  margin-left: 18px;
+}
+.screen-preview-shortcuts {
+  position: absolute;
+  top: 54px;
+  right: 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.screen-preview-shortcuts > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  text-shadow: 0 1px 2px #fffb;
+}
+.screen-preview-shortcuts img {
+  width: 55px;
+  height: 55px;
+}
+.screen-preview-window {
+  position: absolute;
+  top: 73px;
+  left: 98px;
+  right: 113px;
+  bottom: 121px;
+  background: #fefefe;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 13px 45px #161c4b45;
+  border: 1px solid #ffffffad;
+}
+.screen-preview-title {
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f4f8;
+  border-bottom: 1px solid #dddde5;
+  color: #777780;
+  font-size: 11px;
+}
+.screen-preview-title > span {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+.screen-preview-title i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+.screen-preview-title i:nth-child(2) {
+  background: #febc2e;
+}
+.screen-preview-title i:nth-child(3) {
+  background: #28c840;
+}
+.screen-preview-content {
+  display: grid;
+  grid-template-columns: 172px 1fr;
+  height: calc(100% - 32px);
+}
+.screen-preview-content aside {
+  padding: 25px 14px;
+  background: #f1f1f6;
+  border-right: 1px solid #e0e0e6;
+  font-size: 12px;
+  position: relative;
+}
+.screen-preview-content aside > div {
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e0e4f6;
+  color: #777eaf;
+  font-size: 17px;
+  margin-bottom: 29px;
+}
+.screen-preview-content aside small {
+  font-size: 10px;
+  color: #9999a4;
+}
+.screen-preview-content aside p {
+  padding: 9px;
+  margin-top: 6px;
+  border-radius: 5px;
+  color: #8c8c97;
+}
+.screen-preview-content aside p.active {
+  background: #dce7fc;
+  color: #527bb7;
+}
+.screen-preview-content aside footer {
+  position: absolute;
+  bottom: 24px;
+  font-size: 10px;
+  color: #a5a5af;
+}
+.screen-preview-content section {
+  padding: 28px 33px;
+}
+.screen-preview-content .greeting {
+  font-size: 13px;
+  color: #92929b;
+}
+.screen-preview-content h2 {
+  font-family: var(--font-ui);
+  font-size: 43px;
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -1.4px;
+  margin: 13px 0 17px;
+  color: #24242c;
+}
+.screen-preview-role {
+  font-size: 17px;
+  color: #878791;
+}
+.screen-preview-bio {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #93939d;
+  margin-top: 20px;
+  max-width: 360px;
+}
+.screen-preview-cta {
+  font-size: 12px;
+  background: linear-gradient(#2090ff, #0879f8);
+  color: white;
+  display: inline-flex;
+  gap: 25px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-top: 18px;
+}
+.screen-preview-dock {
+  position: absolute;
+  bottom: 23px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  padding: 7px 10px;
+  background: #ffffff55;
+  backdrop-filter: blur(20px);
+  border: 1px solid #ffffffa8;
+  border-radius: 19px;
+  box-shadow: 0 4px 20px #30334a24;
+}
+.screen-preview-dock img {
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(0 2px 2px #0002);
 }

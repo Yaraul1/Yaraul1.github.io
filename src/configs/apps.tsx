@@ -38,6 +38,7 @@ const apps: AppsData[] = [
   },
   {
     id: "contact",
+    dock: false,
     title: "Контакты",
     desktop: true,
     img: "/icons/contact.png",

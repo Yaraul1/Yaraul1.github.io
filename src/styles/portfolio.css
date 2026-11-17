@@ -36,7 +36,7 @@ button {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #7b76df url("/wallpapers/mac-purple.jpg") center center / cover no-repeat;
+  background: #7b76df url("/wallpapers/macos-27-golden-gate.jpg") center center / cover no-repeat;
 }
 .yar-desktop:before {
   content: "";

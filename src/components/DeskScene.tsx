@@ -1,10 +1,14 @@
+import ScreenPreview from "./ScreenPreview";
+import { LaptopDetails } from "./scene/WorkspaceDetails";
 import * as THREE from "three";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Environment,
   Html,
-  Lightformer,
+  ContactShadows,
+  Line,
+  useTexture,
   RoundedBox,
   useCursor,
   useGLTF
@@ -31,14 +35,15 @@ function MacBook({ onEnter, onReady }: Pick<SceneProps, "onEnter" | "onReady">) 
   useEffect(onReady, [onReady]);
   const metal = useMemo(() => {
     const m = materials.aluminium.clone();
-    m.color.set("#bfc3ca");
-    m.roughness = 0.28;
+    m.color.set("#b4b7bf");
+    m.roughness = 0.32;
     m.metalness = 0.85;
     return m;
   }, [materials]);
   useEffect(() => () => metal.dispose(), [metal]);
   return (
     <group
+      dispose={null}
       position={[0, 0.12, -1.65]}
       scale={0.48}
       onClick={(e) => {
@@ -51,7 +56,21 @@ function MacBook({ onEnter, onReady }: Pick<SceneProps, "onEnter" | "onReady">) 
       }}
       onPointerOut={() => setHovered(false)}
     >
+      <LaptopDetails />
       <group rotation={[-0.27, 0, 0]} position={[0, -0.04, 0.41]}>
+        <mesh position={[0, 5.88, -0.015]}>
+          <sphereGeometry args={[0.037, 16, 12]} />
+          <meshPhysicalMaterial
+            color="#11151b"
+            roughness={0.08}
+            metalness={0.4}
+            clearcoat={1}
+          />
+        </mesh>
+        <mesh position={[0.15, 5.88, -0.005]}>
+          <sphereGeometry args={[0.011, 10, 8]} />
+          <meshBasicMaterial color="#87b3a8" />
+        </mesh>
         <group position={[0, 2.96, -0.13]} rotation={[Math.PI / 2, 0, 0]}>
           <mesh castShadow geometry={nodes.Cube008.geometry} material={metal} />
           <mesh geometry={nodes.Cube008_1.geometry} material={materials["matte.001"]} />
@@ -66,12 +85,7 @@ function MacBook({ onEnter, onReady }: Pick<SceneProps, "onEnter" | "onReady">) 
           zIndexRange={[5, 0]}
         >
           <div className="macbook-display">
-            <iframe
-              src="?desktop=1"
-              title="Предпросмотр Yar OS на MacBook"
-              tabIndex={-1}
-              loading="eager"
-            />
+            <ScreenPreview />
             <button
               aria-label="Открыть портфолио на экране MacBook"
               onClick={onEnter}
@@ -105,38 +119,23 @@ function MacBook({ onEnter, onReady }: Pick<SceneProps, "onEnter" | "onReady">) 
 }
 
 function useWoodTexture() {
-  const texture = useMemo(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1024;
-    canvas.height = 1024;
-    const c = canvas.getContext("2d")!;
-    c.fillStyle = "#d4b391";
-    c.fillRect(0, 0, 1024, 1024);
-    let seed = 87;
-    const random = () => {
-      seed = (seed * 16807) % 2147483647;
-      return (seed - 1) / 2147483646;
-    };
-    for (let i = 0; i < 2200; i++) {
-      const y = random() * 1024;
-      c.strokeStyle = `rgba(${random() > 0.5 ? "113,71,39" : "255,239,210"},${random() * 0.12 + 0.025})`;
-      c.lineWidth = random() * 1.8 + 0.3;
-      c.beginPath();
-      c.moveTo(0, y);
-      for (let x = 0; x <= 1024; x += 32)
-        c.lineTo(x, y + Math.sin(x * 0.009 + i) * 2 + random() * 2);
-      c.stroke();
-    }
-    const t = new THREE.CanvasTexture(canvas);
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 8;
-    return t;
-  }, []);
-  useEffect(() => () => texture.dispose(), [texture]);
-  return texture;
+  const textures = useTexture([
+    "/textures/oak-color.jpg",
+    "/textures/oak-normal.jpg",
+    "/textures/oak-roughness.jpg"
+  ]);
+  useMemo(() => {
+    textures.forEach((t, i) => {
+      t.wrapS = t.wrapT = THREE.RepeatWrapping;
+      t.repeat.set(1.4, 0.8);
+      t.anisotropy = 8;
+      if (i === 0) t.colorSpace = THREE.SRGBColorSpace;
+    });
+  }, [textures]);
+  return textures;
 }
 function Desk() {
-  const wood = useWoodTexture();
+  const [wood, woodNormal, woodRoughness] = useWoodTexture();
   return (
     <group>
       <RoundedBox
@@ -147,8 +146,48 @@ function Desk() {
         receiveShadow
         castShadow
       >
-        <meshStandardMaterial map={wood} roughness={0.55} />
+        <meshPhysicalMaterial
+          map={wood}
+          normalMap={woodNormal}
+          normalScale={new THREE.Vector2(0.12, 0.12)}
+          roughnessMap={woodRoughness}
+          roughness={0.75}
+          clearcoat={0.18}
+          clearcoatRoughness={0.6}
+        />
       </RoundedBox>
+      <mesh position={[0, -0.45, -2.6]} castShadow>
+        <boxGeometry args={[11.7, 0.28, 0.18]} />
+        <meshStandardMaterial color="#dddfe4" metalness={0.5} roughness={0.4} />
+      </mesh>
+      <RoundedBox
+        args={[7.4, 0.34, 0.85]}
+        radius={0.05}
+        position={[0, -0.48, -2.62]}
+        castShadow
+      >
+        <meshStandardMaterial color="#c3c7d0" roughness={0.5} metalness={0.6} />
+      </RoundedBox>
+      {[-5.7, 5.7].flatMap((x) =>
+        [-2.6, 2.6].map((z) => (
+          <group key={`${x}-${z}`} position={[x, -0.27, z]}>
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.2, 0.2, 0.035, 24]} />
+              <meshStandardMaterial color="#d6d8df" metalness={0.8} roughness={0.25} />
+            </mesh>
+            {[-0.1, 0.1].map((offset) => (
+              <mesh
+                key={offset}
+                position={[offset, -0.03, 0]}
+                rotation={[Math.PI / 2, 0, 0]}
+              >
+                <cylinderGeometry args={[0.028, 0.028, 0.02, 12]} />
+                <meshStandardMaterial color="#8c9099" metalness={0.7} />
+              </mesh>
+            ))}
+          </group>
+        ))
+      )}
       {[-5.7, 5.7].map((x) => (
         <group key={x} position={[x, -2.2, 0]}>
           {[-2.6, 2.6].map((z) => (
@@ -175,8 +214,22 @@ function Desk() {
         position={[0, 0.005, 0.1]}
         receiveShadow
       >
-        <meshStandardMaterial color="#8b94ac" roughness={0.9} />
+        <meshStandardMaterial color="#8993a6" roughness={0.96} />
       </RoundedBox>
+      <Line
+        points={[
+          [-3.13, 0.027, -2.04],
+          [3.13, 0.027, -2.04],
+          [3.13, 0.027, 2.24],
+          [-3.13, 0.027, 2.24],
+          [-3.13, 0.027, -2.04]
+        ]}
+        color="#c1c8d6"
+        lineWidth={0.8}
+        dashed={true}
+        dashSize={0.026}
+        gapSize={0.027}
+      />
     </group>
   );
 }
@@ -319,41 +372,20 @@ function World(props: SceneProps) {
     <>
       <color attach="background" args={["#e9edf6"]} />
       <fog attach="fog" args={["#e9edf6", 24, 65]} />
-      <ambientLight intensity={0.65} />
-      <hemisphereLight args={["#ffffff", "#b3b8d1", 1.3]} />
+      <ambientLight intensity={0.25} />
+      <hemisphereLight args={["#ffffff", "#b3b8d1", 0.8]} />
       <directionalLight
         position={[-5, 12, 7]}
-        intensity={3.2}
+        intensity={2.4}
         castShadow
-        shadow-mapSize={[1536, 1536]}
+        shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-12}
         shadow-camera-right={12}
         shadow-camera-top={12}
         shadow-camera-bottom={-12}
         shadow-normalBias={0.035}
       />
-      <Environment resolution={64}>
-        <Lightformer
-          intensity={3}
-          color="#fff9f2"
-          position={[-5, 8, 4]}
-          scale={[12, 8, 1]}
-          rotation={[0, Math.PI / 4, 0]}
-        />
-        <Lightformer
-          intensity={2}
-          color="#d8e3ff"
-          position={[8, 3, 0]}
-          scale={[8, 10, 1]}
-          rotation={[0, -Math.PI / 2, 0]}
-        />
-        <Lightformer
-          intensity={1}
-          color="#fff"
-          position={[0, 5, -8]}
-          scale={[10, 5, 1]}
-        />
-      </Environment>
+      <Environment files="/hdri/studio-small-09.hdr" environmentIntensity={0.8} />
       <Desk />
       <Plant />
       <Notebook />
@@ -366,6 +398,15 @@ function World(props: SceneProps) {
         <planeGeometry args={[200, 200]} />
         <meshStandardMaterial color="#dfe5f2" roughness={0.85} />
       </mesh>
+      <ContactShadows
+        position={[0, -4.215, 0]}
+        opacity={0.3}
+        scale={25}
+        blur={2.6}
+        far={9}
+        resolution={512}
+        frames={1}
+      />
       <CameraRig entering={props.entering} reducedMotion={props.reducedMotion} />
     </>
   );

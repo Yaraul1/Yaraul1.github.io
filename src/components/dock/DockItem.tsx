@@ -1,5 +1,3 @@
-import React from "react";
-import useRaf from "@rooks/use-raf";
 import {
   motion,
   useMotionValue,
@@ -7,126 +5,93 @@ import {
   useTransform,
   type MotionValue
 } from "framer-motion";
-
-// Hover effect is adopted from https://github.com/PuruVJ/macos-web/blob/main/src/components/dock/DockItem.tsx
-
-const useDockHoverAnimation = (
-  mouseX: MotionValue,
-  ref: React.RefObject<HTMLImageElement>,
-  dockSize: number,
-  dockMag: number
-) => {
-  const distanceLimit = dockSize * 6;
-  const distanceInput = [
-    -distanceLimit,
-    -distanceLimit / (dockMag * 0.65),
-    -distanceLimit / (dockMag * 0.85),
-    0,
-    distanceLimit / (dockMag * 0.85),
-    distanceLimit / (dockMag * 0.65),
-    distanceLimit
-  ];
-  const widthOutput = [
-    dockSize,
-    dockSize * (dockMag * 0.55),
-    dockSize * (dockMag * 0.75),
-    dockSize * dockMag,
-    dockSize * (dockMag * 0.75),
-    dockSize * (dockMag * 0.55),
-    dockSize
-  ];
-  const beyondTheDistanceLimit = distanceLimit + 1;
-
-  const distance = useMotionValue(beyondTheDistanceLimit);
-  const widthPX = useSpring(useTransform(distance, distanceInput, widthOutput), {
-    stiffness: 1700,
-    damping: 90
-  });
-
-  const width = useTransform(widthPX, (width) => `${width / 16}rem`);
-
-  useRaf(() => {
-    const el = ref.current;
-    const mouseXVal = mouseX.get();
-    if (el && mouseXVal !== null) {
-      const rect = el.getBoundingClientRect();
-      const imgCenterX = rect.left + rect.width / 2;
-      // difference between the x coordinate value of the mouse pointer
-      // and the img center x coordinate value
-      const distanceDelta = mouseXVal - imgCenterX;
-      distance.set(distanceDelta);
-      return;
-    }
-
-    distance.set(beyondTheDistanceLimit);
-  }, true);
-
-  return { width, widthPX };
-};
-
+import { useEffect, useRef, useState } from "react";
+import { useWindowSize } from "~/hooks";
 interface DockItemProps {
   id: string;
   title: string;
   img: string;
-  mouseX: MotionValue;
-  desktop: boolean;
+  mouseX: MotionValue<number | null>;
   openApp: (id: string) => void;
   isOpen: boolean;
   link?: string;
   dockSize: number;
   dockMag: number;
 }
-
 export default function DockItem({
   id,
   title,
   img,
   mouseX,
-  desktop,
   openApp,
   isOpen,
   link,
   dockSize,
   dockMag
 }: DockItemProps) {
-  const imgRef = useRef<HTMLImageElement>(null);
-  const { width } = useDockHoverAnimation(mouseX, imgRef, dockSize, dockMag);
+  const item = useRef<HTMLLIElement>(null);
+  const [focused, setFocused] = useState(false);
   const { winWidth } = useWindowSize();
-
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const base = winWidth < 640 ? 52 : dockSize;
+  const radius = base * 2.7;
+  const distance = useMotionValue(radius);
+  useEffect(
+    () =>
+      mouseX.on("change", (value) => {
+        const rect = item.current?.getBoundingClientRect();
+        distance.set(
+          value === null || !rect ? radius : value - (rect.left + rect.width / 2)
+        );
+      }),
+    [mouseX, distance, radius]
+  );
+  const desired = useTransform(distance, [-radius, 0, radius], [1, dockMag, 1]);
+  const scale = useSpring(desired, { stiffness: 360, damping: 28, mass: 0.3 });
+  const iconScale = winWidth < 640 || reduced ? 1 : scale;
+  const visual = (
+    <motion.img
+      src={img}
+      alt=""
+      draggable={false}
+      style={{ width: base, height: base, scale: iconScale, transformOrigin: "50% 100%" }}
+    />
+  );
   return (
-    <li id={`dock-${id}`} className="relative flex flex-col justify-end mb-1">
-      <p
-        className="tooltip absolute inset-x-0 mx-auto w-max rounded-md bg-c-300/80"
-        p="x-3 y-1"
-        text="sm c-black"
-      >
+    <li
+      ref={item}
+      id={`dock-${id}`}
+      style={{ width: base, height: base + 6 }}
+      className={`yar-dock-item ${focused ? "is-focused" : ""}`}
+    >
+      <span className="yar-dock-tooltip" id={`dock-label-${id}`} role="tooltip">
         {title}
-      </p>
+      </span>
       {link ? (
-        <a href={link} target="_blank" rel="noreferrer">
-          <motion.img
-            ref={imgRef}
-            src={img}
-            alt={title}
-            title={title}
-            draggable={false}
-            style={winWidth < 640 ? {} : { width, willChange: "width" }}
-          />
+        <a
+          href={link}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={title}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+        >
+          {visual}
         </a>
       ) : (
-        <button aria-label={`Открыть: ${title}`} onClick={() => openApp(id)}>
-          <motion.img
-            ref={imgRef}
-            src={img}
-            alt={title}
-            title={title}
-            draggable={false}
-            style={winWidth < 640 ? {} : { width, willChange: "width" }}
-          />
+        <button
+          onClick={() => openApp(id)}
+          aria-label={`Открыть: ${title}`}
+          aria-describedby={`dock-label-${id}`}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+        >
+          {visual}
         </button>
       )}
-      <div
-        className={`size-1 mx-auto rounded-full bg-c-800 ${isOpen ? "" : "invisible"}`}
+      <span
+        className={`yar-dock-indicator ${isOpen ? "is-open" : ""}`}
+        aria-hidden="true"
       />
     </li>
   );

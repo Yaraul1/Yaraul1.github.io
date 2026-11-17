@@ -8,8 +8,8 @@ export interface DockSlice {
 }
 
 export const createDockSlice: StateCreator<DockSlice> = (set) => ({
-  dockSize: 48,
-  dockMag: 1.5,
+  dockSize: 64,
+  dockMag: 1.12,
   setDockSize: (v) => set(() => ({ dockSize: v })),
   setDockMag: (v) => set(() => ({ dockMag: v }))
 });

@@ -114,9 +114,10 @@ const Window = (props: WindowProps) => {
   const dockSize = useStore((state) => state.dockSize);
   const { winWidth, winHeight } = useWindowSize();
   const mobile = winWidth < 640;
+  const reservedHeight = mobile ? 160 : dockSize + 110;
 
   const initWidth = Math.min(winWidth - 32, props.width || 640);
-  const initHeight = Math.min(winHeight - 148, props.height || 400);
+  const initHeight = Math.min(winHeight - reservedHeight, props.height || 400);
 
   const [state, setState] = useState<WindowState>({
     width: initWidth,
@@ -124,7 +125,7 @@ const Window = (props: WindowProps) => {
     // "+ winWidth" because of the boundary for windows
     x: winWidth + (winWidth - initWidth) / 2 + (props.x || 0),
     // "- minMarginY" because of the boundary for windows
-    y: (winHeight - initHeight - dockSize - minMarginY) / 2 + (props.y || 0)
+    y: Math.max(8, (winHeight - reservedHeight - initHeight) / 2 + (props.y || 0) + 8)
   });
 
   const previousViewport = useRef({ width: winWidth, height: winHeight });
@@ -134,17 +135,17 @@ const Window = (props: WindowProps) => {
     previousViewport.current = { width: winWidth, height: winHeight };
     setState((current) => {
       const width = Math.min(winWidth - 32, current.width);
-      const height = Math.min(winHeight - 148, current.height);
+      const height = Math.min(winHeight - reservedHeight, current.height);
       return {
         width,
         height,
         x:
           winWidth +
           Math.max(8, Math.min(current.x - previous.width, winWidth - width - 8)),
-        y: Math.max(8, Math.min(current.y, winHeight - height - 140))
+        y: Math.max(8, Math.min(current.y, winHeight - height - reservedHeight + 8))
       };
     });
-  }, [winWidth, winHeight]);
+  }, [winWidth, winHeight, reservedHeight]);
 
   const round = props.max ? "rounded-none" : "rounded-lg";
   const minimized = props.min
@@ -152,7 +153,11 @@ const Window = (props: WindowProps) => {
     : "";
   const border = props.max ? "" : "border border-gray-500/30";
   const width = mobile ? winWidth - 16 : props.max ? winWidth - 32 : state.width;
-  const height = mobile ? winHeight - 148 : props.max ? winHeight - 148 : state.height;
+  const height = mobile
+    ? winHeight - reservedHeight
+    : props.max
+      ? winHeight - reservedHeight
+      : state.height;
   const disableMax = props.aspectRatio !== undefined;
 
   const children = React.cloneElement(props.children as React.ReactElement, {
