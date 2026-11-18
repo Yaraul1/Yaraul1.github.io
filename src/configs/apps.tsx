@@ -1,10 +1,10 @@
 import type { AppsData } from "~/types";
-import { Profile, Projects, Contact, Readme } from "~/components/apps/Portfolio";
+import { Profile, Projects, Readme } from "~/components/apps/Portfolio";
+import Mail from "~/components/apps/Mail";
 import Terminal from "~/components/apps/Terminal";
 const apps: AppsData[] = [
   {
     id: "profile",
-    title: "Обо мне",
     desktop: true,
     img: "/icons/profile.png",
     width: 900,
@@ -16,18 +16,17 @@ const apps: AppsData[] = [
   },
   {
     id: "projects",
-    title: "Проекты",
     desktop: true,
+    toolbar: true,
     img: "/icons/projects.png",
-    width: 1120,
-    height: 700,
+    width: 1180,
+    height: 780,
     x: 25,
     y: 0,
     content: <Projects />
   },
   {
     id: "terminal",
-    title: "Терминал",
     desktop: true,
     img: "/icons/terminal.png",
     width: 700,
@@ -38,19 +37,17 @@ const apps: AppsData[] = [
   },
   {
     id: "contact",
-    dock: false,
-    title: "Контакты",
     desktop: true,
+    toolbar: true,
     img: "/icons/contact.png",
-    width: 620,
-    height: 560,
+    width: 920,
+    height: 640,
     x: 70,
     y: 0,
-    content: <Contact />
+    content: <Mail />
   },
   {
     id: "readme",
-    title: "Об этой ОС",
     desktop: true,
     img: "/icons/readme.png",
     width: 640,

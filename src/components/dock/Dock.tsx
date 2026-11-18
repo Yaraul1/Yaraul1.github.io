@@ -1,6 +1,7 @@
 import { useMotionValue } from "framer-motion";
 import { apps } from "~/configs";
 import DockItem from "./DockItem";
+import { useT } from "~/i18n/useLang";
 import "~/styles/dock.css";
 interface DockProps {
   open: (id: string) => void;
@@ -15,10 +16,11 @@ export default function Dock({ open, showApps, hide }: DockProps) {
     dockMag: state.dockMag
   }));
   const mouseX = useMotionValue<number | null>(null);
+  const t = useT();
   return (
     <nav
       className={`yar-dock ${hide ? "yar-dock-hidden" : ""}`}
-      aria-label="Док приложений"
+      aria-label={t.desktop.dock}
     >
       <ul
         onMouseMove={(e) => mouseX.set(e.clientX)}
@@ -30,7 +32,8 @@ export default function Dock({ open, showApps, hide }: DockProps) {
             <DockItem
               key={app.id}
               id={app.id}
-              title={app.title}
+              title={t.apps[app.id]}
+              openLabel={t.desktop.openApp(t.apps[app.id])}
               img={app.img}
               mouseX={mouseX}
               openApp={open}

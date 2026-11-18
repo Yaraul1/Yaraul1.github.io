@@ -2,7 +2,9 @@
   position: fixed;
   z-index: 80;
   left: 50%;
-  bottom: 27px;
+  /* closer to the edge in a short window; --os-dock-lift raises it above the system Dock
+     when that one covers the bottom of the page (useOsDockInset) */
+  bottom: calc(clamp(14px, 3.6dvh, 30px) + var(--os-dock-lift, 0px));
   transform: translateX(-50%);
   width: max-content;
   max-width: calc(100vw - 28px);
@@ -12,17 +14,19 @@
   display: flex;
   align-items: flex-end;
   gap: 7px;
-  height: 84px;
+  /* as tall as the icons, which follow the window size (dockIconSize) */
+  height: auto;
   padding: 8px 12px 4px;
   margin: 0;
   list-style: none;
-  background: #f6f5ff55;
-  border: 1px solid #ffffff8c;
-  border-radius: 23px;
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  border-radius: 24px;
   box-shadow:
-    0 8px 32px #20234430,
-    inset 0 1px 1px #fff9;
-  backdrop-filter: blur(28px) saturate(1.4);
+    0 10px 36px #1a120a40,
+    inset 0 1px 0 #ffffff40;
+  backdrop-filter: blur(30px) saturate(1.6);
+  -webkit-backdrop-filter: blur(30px) saturate(1.6);
   overflow: visible;
 }
 .yar-dock-item {
@@ -64,13 +68,13 @@
   transform: translate(-50%, 4px);
   white-space: nowrap;
   padding: 8px 14px;
-  background: #fffffff0;
-  border: 1px solid #ffffffdc;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-line);
   border-radius: 9px;
-  box-shadow: 0 4px 16px #23294426;
+  box-shadow: var(--shadow-popover);
   font: 13px/1.25 var(--font-ui, -apple-system, sans-serif);
   font-weight: 500;
-  color: #34343d;
+  color: var(--c-text);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -86,7 +90,7 @@
   bottom: -5px;
   width: 9px;
   height: 9px;
-  background: #fffffff0;
+  background: var(--glass-strong);
   transform: translateX(-50%) rotate(45deg);
   border-radius: 0 0 2px;
 }
@@ -101,25 +105,32 @@
   height: 4px;
   margin-top: 2px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--glass-text);
   opacity: 0;
-  box-shadow: 0 1px 2px #3333;
+  box-shadow: 0 0 2px #fff6;
 }
 .yar-dock-indicator.is-open {
   opacity: 0.95;
 }
+.yar-dock {
+  transition:
+    opacity 0.3s,
+    translate 0.35s cubic-bezier(0.2, 0.85, 0.25, 1),
+    bottom 0.35s cubic-bezier(0.2, 0.85, 0.25, 1);
+}
 .yar-dock-hidden {
   pointer-events: none;
   opacity: 0;
+  translate: 0 140px;
 }
 @media (max-width: 639px) {
   .yar-dock {
-    bottom: 28px;
+    bottom: calc(clamp(14px, 3.4dvh, 28px) + var(--os-dock-lift, 0px));
     max-width: calc(100vw - 20px);
   }
   .yar-dock ul {
     gap: 4px;
-    height: 72px;
+    height: auto;
     padding: 6px 9px 4px;
     border-radius: 20px;
   }

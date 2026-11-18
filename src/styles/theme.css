@@ -1,0 +1,134 @@
+/*
+  Yar OS colour tokens.
+  Light: warm linen instead of pure white — less glare on long reading.
+  Dark: warm graphite (not pure black), off-white text, softened accent.
+  Theme is set on <html data-theme="light|dark"> before first paint (index.html).
+*/
+:root,
+:root[data-theme="light"] {
+  --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI",
+    sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue",
+    "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --font-paper: "PT Serif", "Times New Roman", Georgia, serif;
+
+  /* surfaces */
+  --c-bg: #f5f0e7;
+  --c-raised: #fbf8f2;
+  --c-sunken: #ede6d9;
+  --c-sidebar: #ebe3d5e6;
+  --c-bar: #ebe4d7f0;
+  --c-hover: #e4dccd;
+  --c-selected: #d9e3f5;
+
+  /* lines */
+  --c-line: #e1d7c6;
+  --c-line-strong: #cec1ab;
+
+  /* text */
+  --c-text: #2a251f;
+  --c-text-2: #62594d;
+  --c-text-3: #8f8475;
+
+  /* accents */
+  --c-accent: #2462cf;
+  --c-accent-hover: #1b55bb;
+  --c-accent-text: #ffffff;
+  --c-accent-soft: #2462cf18;
+  --c-success: #2e7a4c;
+  --c-success-soft: #2e7a4c18;
+  --c-danger: #b23f2c;
+  --c-danger-soft: #b23f2c17;
+  --c-ink: #3446b0;
+  --c-ink-soft: #3446b014;
+
+  /* code */
+  --c-code-bg: #f0e9dc;
+  --c-code-line: #e3d9c8;
+
+  /* glass chrome (menu bar, dock, popovers) */
+  --glass: #f6f1e8b8;
+  --glass-strong: #f8f4ecf2;
+  --glass-line: #ffffffa8;
+  --glass-sheen: #ffffff99;
+  --glass-text: #2a251f;
+  --menubar-bg: #f3ede3a6;
+  --menubar-text: #231f1a;
+  --wallpaper-dim: transparent;
+
+  --shadow-window: 0 0 0 0.5px #5a4a3240, 0 22px 60px -8px #3b2d1a4d, 0 6px 18px #3b2d1a1f;
+  --shadow-popover: 0 0 0 0.5px #5a4a3238, 0 18px 46px #3b2d1a33;
+  --shadow-card: 0 1px 0 #ffffffb0 inset, 0 1px 2px #5a4a3214;
+  --shadow-float: 0 0 0 0.5px #5a4a3229, 0 12px 32px -14px #3b2d1a4d, 0 2px 6px -3px #3b2d1a26;
+
+  --traffic-close: #ff5f57;
+  --traffic-min: #febc2e;
+  --traffic-max: #28c840;
+  --traffic-idle: #d3c9b9;
+}
+
+:root[data-theme="dark"] {
+  --c-bg: #1e1d1b;
+  --c-raised: #272523;
+  --c-sunken: #191816;
+  --c-sidebar: #23211fe6;
+  --c-bar: #2a2825f0;
+  --c-hover: #33302c;
+  --c-selected: #2c3b57;
+
+  --c-line: #35322e;
+  --c-line-strong: #4a4640;
+
+  --c-text: #ece6dc;
+  --c-text-2: #b4ab9f;
+  --c-text-3: #847b70;
+
+  --c-accent: #6b9dff;
+  --c-accent-hover: #86afff;
+  --c-accent-text: #0f1726;
+  --c-accent-soft: #6b9dff22;
+  --c-success: #6cc28e;
+  --c-success-soft: #6cc28e1f;
+  --c-danger: #f08672;
+  --c-danger-soft: #f086721f;
+  --c-ink: #9aa6ff;
+  --c-ink-soft: #9aa6ff1c;
+
+  --c-code-bg: #171614;
+  --c-code-line: #2c2a27;
+
+  --glass: #2a2724b8;
+  --glass-strong: #2b2825f2;
+  --glass-line: #ffffff1f;
+  --glass-sheen: #ffffff1a;
+  --glass-text: #f1ebe2;
+  --menubar-bg: #1d1b19a6;
+  --menubar-text: #f3eee6;
+  --wallpaper-dim: linear-gradient(#0d0c0bb8, #0d0c0bcc);
+
+  --shadow-window: 0 0 0 0.5px #000000b3, 0 0 0 1px #ffffff14 inset, 0 24px 70px -6px #000000a6,
+    0 6px 20px #00000066;
+  --shadow-popover: 0 0 0 0.5px #000000b3, 0 0 0 1px #ffffff12 inset, 0 18px 46px #00000080;
+  --shadow-card: 0 1px 0 #ffffff0a inset, 0 1px 2px #00000040;
+  --shadow-float: 0 0 0 0.5px #000000a6, 0 14px 34px -14px #000000b3, 0 2px 6px -3px #00000066;
+
+  --traffic-idle: #4a4640;
+}
+
+html,
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+}
+
+/* Theme change: the old page stays put and the new theme is revealed by a circle that grows
+   from the toggle (utils/themeTransition.ts animates the clip-path). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  z-index: 1;
+}

@@ -1,35 +1,44 @@
 interface FsDocumentElement extends HTMLElement {
-  msRequestFullscreen?: () => void;
-  mozRequestFullScreen?: () => void;
   webkitRequestFullscreen?: () => void;
 }
 
 interface FsDocument extends Document {
   webkitIsFullScreen?: boolean;
-  mozFullScreen?: boolean;
-  msFullscreenElement?: Element;
+  webkitFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => void;
 }
 
-export const enterFullScreen = (): void => {
-  if (!isFullScreen()) {
-    const element = document.documentElement as FsDocumentElement;
-    if (element.requestFullscreen) element.requestFullscreen();
-    else if (element.msRequestFullscreen) element.msRequestFullscreen();
-    else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
-    else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
+/** Ask the browser for full screen. Resolves to false when it is refused or unsupported. */
+export const enterFullScreen = async (): Promise<boolean> => {
+  if (isFullScreen()) return true;
+  const element = document.documentElement as FsDocumentElement;
+  try {
+    if (element.requestFullscreen) {
+      await element.requestFullscreen({ navigationUI: "hide" });
+      return true;
+    }
+    if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+      return true;
+    }
+  } catch {
+    /* refused (no user gesture, iframe policy, iOS) — the window still fills the page */
   }
+  return false;
 };
 
 export const exitFullScreen = (): void => {
-  if (isFullScreen()) document.exitFullscreen();
+  if (!isFullScreen()) return;
+  const fsDoc = document as FsDocument;
+  if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+  else fsDoc.webkitExitFullscreen?.();
 };
 
 export const isFullScreen = (): boolean => {
   const fsDoc = document as FsDocument;
   return !!(
     fsDoc.fullscreenElement ||
-    fsDoc.webkitIsFullScreen ||
-    fsDoc.mozFullScreen ||
-    fsDoc.msFullscreenElement
+    fsDoc.webkitFullscreenElement ||
+    fsDoc.webkitIsFullScreen
   );
 };

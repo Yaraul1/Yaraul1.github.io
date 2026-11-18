@@ -7,9 +7,12 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useWindowSize } from "~/hooks";
+import { dockIconSize } from "./dockSize";
 interface DockItemProps {
   id: string;
   title: string;
+  /** accessible name of the button, e.g. "Open Projects" */
+  openLabel: string;
   img: string;
   mouseX: MotionValue<number | null>;
   openApp: (id: string) => void;
@@ -21,6 +24,7 @@ interface DockItemProps {
 export default function DockItem({
   id,
   title,
+  openLabel,
   img,
   mouseX,
   openApp,
@@ -31,9 +35,9 @@ export default function DockItem({
 }: DockItemProps) {
   const item = useRef<HTMLLIElement>(null);
   const [focused, setFocused] = useState(false);
-  const { winWidth } = useWindowSize();
+  const { winWidth, winHeight } = useWindowSize();
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const base = winWidth < 640 ? 52 : dockSize;
+  const base = dockIconSize(winWidth, winHeight, dockSize);
   const radius = base * 2.7;
   const distance = useMotionValue(radius);
   useEffect(
@@ -81,7 +85,7 @@ export default function DockItem({
       ) : (
         <button
           onClick={() => openApp(id)}
-          aria-label={`Открыть: ${title}`}
+          aria-label={openLabel}
           aria-describedby={`dock-label-${id}`}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}

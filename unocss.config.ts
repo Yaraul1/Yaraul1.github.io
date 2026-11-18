@@ -4,9 +4,19 @@ import {
   presetIcons,
   presetUno,
   transformerDirectives,
-  transformerVariantGroup,
-  transformerAttributifyJsx
+  transformerVariantGroup
 } from "unocss";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+// The automatic icon loader cannot resolve @iconify/json under pnpm, so load sets explicitly.
+const iconSet = (name: string) => () =>
+  JSON.parse(
+    readFileSync(
+      resolve(process.cwd(), `node_modules/@iconify/json/json/${name}.json`),
+      "utf8"
+    )
+  );
 
 const colorReg = (prefix: string) => new RegExp("^" + prefix + "-([0-9a-z]+)(/(\\d+))?$");
 
@@ -31,6 +41,18 @@ const colorAttr = (prefix: string, [, color, , opacity]: RegExpMatchArray) => {
 };
 
 export default defineConfig({
+  content: {
+    pipeline: {
+      // the defaults (components and HTML) plus data files that carry icon classes:
+      // src/configs/*.ts (social links) and the LegalHub case content
+      include: [
+        /\.([jt]sx|mdx?|html)($|\?)/,
+        /src\/configs\/[^/]+\.ts($|\?)/,
+        /src\/components\/legalhub\/content[^/]*\.ts($|\?)/,
+        /src\/components\/cases\/data\/[^/]+\.ts($|\?)/
+      ]
+    }
+  },
   shortcuts: [
     ["flex-center", "flex items-center justify-center"],
     ["hstack", "flex items-center"],
@@ -65,14 +87,13 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({
       warn: true,
+      collections: { ph: iconSet("ph") },
       extraProperties: {
         display: "inline-block"
       }
     })
   ],
-  transformers: [
-    transformerDirectives(),
-    transformerVariantGroup(),
-    transformerAttributifyJsx()
-  ]
+  // transformerAttributifyJsx is intentionally not used: nothing here relies on valueless
+  // utility attributes, and its regex rewrote plain code (e.g. `transition.current = …`).
+  transformers: [transformerDirectives(), transformerVariantGroup()]
 });

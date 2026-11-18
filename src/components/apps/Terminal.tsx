@@ -1,5 +1,11 @@
 import { portfolio, openPortfolioApp } from "~/configs/portfolio";
+import { filledSocials } from "~/configs/socials";
+import { useLang, useT } from "~/i18n/useLang";
+import { locale } from "~/i18n/lang";
+import { ui } from "~/i18n/ui";
 export default function Terminal() {
+  const t = useT();
+  const [lang, setLang] = useLang();
   const [lines, setLines] = useState<{ command: string; output: string }[]>([]);
   const [command, setCommand] = useState("");
   const [history, setHistory] = useState<string[]>([]);
@@ -23,29 +29,31 @@ export default function Terminal() {
     }
     switch (cmd) {
       case "help":
-        output =
-          "about      — обо мне\nprojects   — открыть проекты\ncontact    — контакты\nopen       — open profile | projects | contact | readme\nwhoami     — кто здесь\nls         — файлы рабочего стола\ndate       — текущее время\nclear      — очистить терминал";
+        output = t.terminal.help;
         break;
       case "about":
       case "whoami":
-        output = `${portfolio.name}\n${portfolio.role}\n\n${portfolio.bio}`;
+        output = `${portfolio.name}\n${portfolio.role}\n\n${portfolio.bio[lang]}`;
         break;
       case "projects":
         openPortfolioApp("projects");
-        output = "Открываю проекты…";
+        output = t.terminal.openingProjects;
         break;
       case "contact":
         openPortfolioApp("contact");
         output =
-          [portfolio.email, portfolio.github, portfolio.telegram]
+          [
+            portfolio.email,
+            ...filledSocials().map((s) => `${s.name}: ${portfolio.socials[s.id]}`)
+          ]
             .filter(Boolean)
-            .join("\n") || "Раздел контактов ещё заполняется.";
+            .join("\n") || t.terminal.contactsPending;
         break;
       case "ls":
         output = "profile.app   projects.app   contact.app   readme.md";
         break;
       case "date":
-        output = new Date().toLocaleString("ru-RU");
+        output = new Date().toLocaleString(locale(lang));
         break;
       case "pwd":
         output = "/home/yar/portfolio";
@@ -56,13 +64,19 @@ export default function Terminal() {
       case "open":
         if (["profile", "projects", "contact", "readme", "terminal"].includes(args[0])) {
           openPortfolioApp(args[0]);
-          output = `Открываю ${args[0]}…`;
+          output = t.terminal.opening(args[0]);
         } else {
-          output = "Приложение не найдено. Попробуй: open projects";
+          output = t.terminal.noApp;
         }
         break;
+      case "lang":
+        if (args[0] === "ru" || args[0] === "en") {
+          setLang(args[0]);
+          output = ui[args[0]].terminal.langSet; // confirm in the new language
+        } else output = t.terminal.langUsage;
+        break;
       default:
-        output = `Команда «${cmd}» не найдена. Введи help.`;
+        output = t.terminal.notFound(cmd);
     }
     setLines((l) => [...l, { command: input, output }]);
   }
@@ -78,7 +92,7 @@ export default function Terminal() {
       <p className="terminal-welcome">
         {portfolio.name} / {portfolio.role}
         <br />
-        <span>Введи help, чтобы начать.</span>
+        <span>{t.terminal.welcome}</span>
       </p>
       <div aria-live="polite">
         {lines.map((line, i) => (
@@ -95,7 +109,7 @@ export default function Terminal() {
         <label htmlFor="terminal-command">yar@portfolio ~ %</label>
         <input
           id="terminal-command"
-          aria-label="Команда терминала"
+          aria-label={t.terminal.command}
           autoComplete="off"
           autoCapitalize="none"
           spellCheck={false}

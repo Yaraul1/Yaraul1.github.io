@@ -1,0 +1,372 @@
+import type { Lang } from "./lang";
+
+/*
+  Interface strings. Russian is the source; English must have exactly the same keys
+  (enforced by the UIStrings type). Every new UI text goes into both.
+*/
+
+const ru = {
+  langName: "Русский",
+  langShort: "RU",
+  langSwitch: "Язык",
+  landing: {
+    region: "Рабочее место Ярослава",
+    scene: "Стол с MacBook, двумя мониторами, блокнотом и чашкой кофе",
+    title: "Добро пожаловать в моё рабочее место!",
+    subtitle: "Устраивайся поудобнее и давай смотреть, что я умею!",
+    loading: "Готовим рабочее место…",
+    open: "Открыть портфолио",
+    hintPointer: "Нажмите на экран MacBook или Enter",
+    hintTouch: "Коснитесь экрана MacBook",
+    failed: "3D-сцена недоступна — портфолио откроется кнопкой выше",
+    fallback: "Портфолио готово к открытию.",
+    laptopButton: "Войти в портфолио: нажать на экран MacBook"
+  },
+  lock: { hint: "Нажмите, чтобы войти" },
+  window: {
+    close: "Закрыть окно",
+    minimize: "Свернуть окно",
+    enterFull: "Развернуть на весь экран",
+    exitFull: "Выйти из полноэкранного режима",
+    enterFullTitle: "На весь экран",
+    exitFullTitle: "Выйти из полноэкранного режима (Esc)"
+  },
+  apps: {
+    profile: "Обо мне",
+    projects: "Проекты",
+    terminal: "Терминал",
+    contact: "Почта",
+    readme: "Об этой ОС"
+  } as Record<string, string>,
+  desktop: {
+    desktop: "Рабочий стол",
+    osMenu: "Меню Yar OS",
+    tagline: "Yaroslav Yuferev · AI Engineer",
+    toLight: "Включить светлую тему",
+    toDark: "Включить тёмную тему",
+    lightTitle: "Светлая тема",
+    darkTitle: "Тёмная тема",
+    search: "Поиск приложений",
+    searchTitle: "Поиск (⌘K)",
+    controlCenter: "Пункт управления",
+    closeMenu: "Закрыть меню",
+    about: "Об этой ОС",
+    terminal: "Терминал",
+    showDesktop: "Показать рабочий стол",
+    backToDesk: "Вернуться к столу",
+    appearance: "Оформление",
+    theme: "Тема",
+    light: "Светлая",
+    dark: "Тёмная",
+    auto: "Авто",
+    fullscreen: "Полный экран",
+    fullscreenOn: "Включён",
+    fullscreenOff: "Скрыть панели браузера",
+    desktopTile: "Рабочий стол",
+    minimizeAll: "Свернуть все окна",
+    ccHint:
+      "Зелёная кнопка окна разворачивает его на весь экран. Выход — она же или Esc.",
+    shortcuts: "Приложения рабочего стола",
+    dock: "Док приложений",
+    openApp: (title: string) => `Открыть: ${title}`,
+    aboutSite: "Об этом сайте",
+    findApp: "Найти приложение",
+    searchPlaceholder: "Что открыть?",
+    appsLabel: "Приложения",
+    noResults: "Такого приложения нет. Попробуйте «проекты».",
+    switchLang: "Switch to English"
+  },
+  profile: {
+    sidebar: "Портфолио",
+    openProjects: "Открыть проекты",
+    contact: "Написать письмо",
+    footer: "Рад знакомству",
+    tryTerminal: "Попробуй терминал",
+    socials: "Я в соцсетях",
+    socialMissing: (name: string) =>
+      `${name}: ссылка не заполнена — src/configs/portfolio.ts (видно только при разработке)`
+  },
+  projects: {
+    eyebrow: "Мои работы",
+    title: "Проекты",
+    count: (n: number): string => (n === 1 ? "проект" : n < 5 ? "проекта" : "проектов"),
+    stamp: "КОПИЯ ВЕРНА",
+    stampNote: "образец",
+    openCase: "Открыть кейс",
+    openSite: "Открыть сайт",
+    source: "Исходники",
+    emptyTitle: "Проекты появятся здесь",
+    emptyText:
+      "Раздел готовится. Скоро здесь появятся проекты, их истории и то, что получилось в итоге.",
+    emptyLabel: "Раздел ещё заполняется",
+    next: "Продолжим знакомство ↗",
+    toolbar: "Окно проектов",
+    toDesktop: "Рабочий стол",
+    toDesktopTitle: "Убрать окно в Dock и открыть рабочий стол",
+    expand: "На весь экран",
+    collapse: "Уменьшить"
+  },
+  mail: {
+    compose: "Новое письмо",
+    attach: "Прикрепить",
+    attachTitle: "Прикрепить файлы — до 5 штук, до 10 МБ вместе",
+    dropHere: "Отпустите, чтобы прикрепить",
+    attachments: "Вложения",
+    remove: (name: string) => `Убрать ${name}`,
+    tooBig: "Вложения больше 10 МБ — уберите часть файлов",
+    tooMany: "Можно прикрепить до 5 файлов",
+    activationTitle: "Почта ждёт подтверждения",
+    activationText:
+      "FormSubmit отправил владельцу сайта письмо с подтверждением. Как только его подтвердят, письма начнут доходить.",
+    to: "Кому",
+    name: "Имя",
+    namePlaceholder: "Как к вам обращаться",
+    email: "Email",
+    emailPlaceholder: "you@example.com",
+    subject: "Тема",
+    subjectPlaceholder: "О чём письмо",
+    message: "Сообщение",
+    messagePlaceholder: "Расскажите об идее, задаче или просто поздоровайтесь…",
+    send: "Отправить",
+    sending: "Отправляю…",
+    shortcut: "⌘ Enter — отправить",
+    errors: {
+      name: "Напишите, как к вам обращаться",
+      email: "Проверьте адрес — на него придёт ответ",
+      message: "Напишите хотя бы пару слов"
+    },
+    sentTitle: "Письмо отправлено",
+    sentText: (email: string) => `Спасибо! Отвечу на ${email}.`,
+    another: "Написать ещё",
+    failedTitle: "Не удалось отправить",
+    failedText: "Проверьте соединение и попробуйте ещё раз — или напишите напрямую.",
+    rateLimited: "Слишком много писем подряд. Попробуйте через минуту.",
+    retry: "Повторить",
+    notConfiguredTitle: "Отправка с сайта ещё не подключена",
+    notConfiguredText: "Текст письма сохранён. Пока можно написать напрямую:",
+    openMailApp: "Открыть в почтовом приложении",
+    devHint: "Адрес для FormSubmit: src/configs/portfolio.ts → contactForm",
+    direct: "Или напрямую",
+    fallbackSubject: (name: string) => `Сообщение с сайта от ${name}`
+  },
+  readme: {
+    eyebrow: "Об этом сайте",
+    title: "Небольшая ОС.\nЛичное пространство.",
+    text: "Yar OS — портфолио Ярослава Юферева, AI Engineer. Здесь можно открывать окна, исследовать проекты и знакомиться через терминал.",
+    rows: [
+      ["Открыть приложение", "Иконка на рабочем столе или в доке"],
+      ["Переместить окно", "Потяни за верхнюю панель"],
+      ["Поиск приложений", "⌘ / Ctrl + K"],
+      ["Терминал", "Начни с команды help"],
+      ["Язык", "RU / EN в строке меню"]
+    ] as [string, string][],
+    credit: "Основа интерфейса —"
+  },
+  terminal: {
+    welcome: "Введи help, чтобы начать.",
+    command: "Команда терминала",
+    help: [
+      "about      — обо мне",
+      "projects   — открыть проекты",
+      "contact    — контакты",
+      "open       — open profile | projects | contact | readme",
+      "whoami     — кто здесь",
+      "ls         — файлы рабочего стола",
+      "date       — текущее время",
+      "lang       — lang ru | lang en",
+      "clear      — очистить терминал"
+    ].join("\n"),
+    openingProjects: "Открываю проекты…",
+    contactsPending: "Раздел контактов ещё заполняется.",
+    opening: (app: string) => `Открываю ${app}…`,
+    noApp: "Приложение не найдено. Попробуй: open projects",
+    notFound: (cmd: string) => `Команда «${cmd}» не найдена. Введи help.`,
+    langSet: "Язык: русский",
+    langUsage: "Использование: lang ru | lang en"
+  }
+};
+
+export type UIStrings = typeof ru;
+
+const en: UIStrings = {
+  langName: "English",
+  langShort: "EN",
+  langSwitch: "Language",
+  landing: {
+    region: "Yaroslav's workspace",
+    scene: "A desk with a MacBook, two monitors, a notebook and a cup of coffee",
+    title: "Welcome to my workspace!",
+    subtitle: "Make yourself comfortable — let me show you what I can do!",
+    loading: "Setting up the desk…",
+    open: "Open portfolio",
+    hintPointer: "Click the MacBook screen or press Enter",
+    hintTouch: "Tap the MacBook screen",
+    failed: "The 3D scene isn't available — use the button above to open the portfolio",
+    fallback: "The portfolio is ready to open.",
+    laptopButton: "Enter the portfolio: click the MacBook screen"
+  },
+  lock: { hint: "Click to sign in" },
+  window: {
+    close: "Close window",
+    minimize: "Minimize window",
+    enterFull: "Enter full screen",
+    exitFull: "Exit full screen",
+    enterFullTitle: "Full screen",
+    exitFullTitle: "Exit full screen (Esc)"
+  },
+  apps: {
+    profile: "About me",
+    projects: "Projects",
+    terminal: "Terminal",
+    contact: "Mail",
+    readme: "About this OS"
+  },
+  desktop: {
+    desktop: "Desktop",
+    osMenu: "Yar OS menu",
+    tagline: "Yaroslav Yuferev · AI Engineer",
+    toLight: "Switch to light theme",
+    toDark: "Switch to dark theme",
+    lightTitle: "Light theme",
+    darkTitle: "Dark theme",
+    search: "Search apps",
+    searchTitle: "Search (⌘K)",
+    controlCenter: "Control Center",
+    closeMenu: "Close menu",
+    about: "About this OS",
+    terminal: "Terminal",
+    showDesktop: "Show desktop",
+    backToDesk: "Back to the desk",
+    appearance: "Appearance",
+    theme: "Theme",
+    light: "Light",
+    dark: "Dark",
+    auto: "Auto",
+    fullscreen: "Full screen",
+    fullscreenOn: "On",
+    fullscreenOff: "Hide browser bars",
+    desktopTile: "Desktop",
+    minimizeAll: "Minimize all windows",
+    ccHint:
+      "The green window button takes it full screen. Click it again or press Esc to exit.",
+    shortcuts: "Desktop apps",
+    dock: "App dock",
+    openApp: (title: string) => `Open ${title}`,
+    aboutSite: "About this site",
+    findApp: "Find an app",
+    searchPlaceholder: "What would you like to open?",
+    appsLabel: "Apps",
+    noResults: "No app by that name. Try “projects”.",
+    switchLang: "Переключить на русский"
+  },
+  profile: {
+    sidebar: "Portfolio",
+    openProjects: "View projects",
+    contact: "Write an email",
+    footer: "Nice to meet you",
+    tryTerminal: "Try the terminal",
+    socials: "Find me online",
+    socialMissing: (name: string) =>
+      `${name}: link not set — src/configs/portfolio.ts (visible in development only)`
+  },
+  projects: {
+    eyebrow: "My work",
+    title: "Projects",
+    count: (n: number) => (n === 1 ? "project" : "projects"),
+    stamp: "КОПИЯ ВЕРНА",
+    stampNote: "sample",
+    openCase: "Open case study",
+    openSite: "Open site",
+    source: "Source code",
+    emptyTitle: "Projects will appear here",
+    emptyText:
+      "This section is on its way: projects, their stories and how they turned out.",
+    emptyLabel: "Still being filled in",
+    next: "Let's keep in touch ↗",
+    toolbar: "Projects window",
+    toDesktop: "Desktop",
+    toDesktopTitle: "Hide the window in the Dock and show the desktop",
+    expand: "Full screen",
+    collapse: "Exit full screen"
+  },
+  mail: {
+    compose: "New message",
+    attach: "Attach",
+    attachTitle: "Attach files — up to 5, 10 MB in total",
+    dropHere: "Drop to attach",
+    attachments: "Attachments",
+    remove: (name: string) => `Remove ${name}`,
+    tooBig: "Attachments exceed 10 MB — remove some files",
+    tooMany: "You can attach up to 5 files",
+    activationTitle: "Mail is waiting for confirmation",
+    activationText:
+      "FormSubmit has emailed the site owner a confirmation link. Messages will arrive as soon as it's confirmed.",
+    to: "To",
+    name: "Name",
+    namePlaceholder: "What should I call you",
+    email: "Email",
+    emailPlaceholder: "you@example.com",
+    subject: "Subject",
+    subjectPlaceholder: "What it's about",
+    message: "Message",
+    messagePlaceholder: "Tell me about an idea or a task — or just say hi…",
+    send: "Send",
+    sending: "Sending…",
+    shortcut: "⌘ Enter to send",
+    errors: {
+      name: "Tell me what to call you",
+      email: "Check the address — the reply goes there",
+      message: "Write at least a few words"
+    },
+    sentTitle: "Message sent",
+    sentText: (email: string) => `Thanks! I'll reply to ${email}.`,
+    another: "Write another",
+    failedTitle: "Couldn't send",
+    failedText: "Check your connection and try again — or reach me directly.",
+    rateLimited: "Too many messages in a row. Try again in a minute.",
+    retry: "Try again",
+    notConfiguredTitle: "Sending from the site isn't set up yet",
+    notConfiguredText: "Your message is saved. For now you can reach me directly:",
+    openMailApp: "Open in your mail app",
+    devHint: "FormSubmit address: src/configs/portfolio.ts → contactForm",
+    direct: "Or directly",
+    fallbackSubject: (name: string) => `Message from the site from ${name}`
+  },
+  readme: {
+    eyebrow: "About this site",
+    title: "A small OS.\nA personal space.",
+    text: "Yar OS is the portfolio of Yaroslav Yuferev, AI Engineer. Open windows, explore the projects and say hi through the terminal.",
+    rows: [
+      ["Open an app", "Desktop icon or the dock"],
+      ["Move a window", "Drag its title bar"],
+      ["Search apps", "⌘ / Ctrl + K"],
+      ["Terminal", "Start with the help command"],
+      ["Language", "RU / EN in the menu bar"]
+    ],
+    credit: "Interface based on"
+  },
+  terminal: {
+    welcome: "Type help to get started.",
+    command: "Terminal command",
+    help: [
+      "about      — about me",
+      "projects   — open projects",
+      "contact    — contact details",
+      "open       — open profile | projects | contact | readme",
+      "whoami     — who's here",
+      "ls         — desktop files",
+      "date       — current time",
+      "lang       — lang ru | lang en",
+      "clear      — clear the terminal"
+    ].join("\n"),
+    openingProjects: "Opening projects…",
+    contactsPending: "Contact details are still being filled in.",
+    opening: (app: string) => `Opening ${app}…`,
+    noApp: "No such app. Try: open projects",
+    notFound: (cmd: string) => `Command “${cmd}” not found. Type help.`,
+    langSet: "Language: English",
+    langUsage: "Usage: lang ru | lang en"
+  }
+};
+
+export const ui: Record<Lang, UIStrings> = { ru, en };
