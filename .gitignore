@@ -7,9 +7,8 @@ dist/
 .sites-runtime/
 .sites-checkout/
 
-# personal files: the CV and the photo stay local; the site shows them only where the files are
+# personal files: the CV stays local; the "Download CV" button shows only where the file is
 public/resume/
-public/profile/
 
 # local tooling, not part of the site
 .agents/

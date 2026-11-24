@@ -29,7 +29,7 @@ The desk, coffee cup, notebook and plant are implemented locally in `src/compone
 
 ## Profile photo
 
-`profile/photo.webp` is the owner's own portrait, resized to 320×320 for the «About me» window. It is kept out of the repository (`.gitignore`); without it the window shows the initials.
+`profile/photo.webp` is the owner's own portrait, resized to 320×320 for the «About me» window.
 
 ## Assistant avatar
 
