@@ -820,6 +820,50 @@ h2 {
   flex-wrap: wrap;
   gap: 22px;
 }
+/* profile links: round icons in the same row as the buttons */
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.social {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--c-line);
+  border-radius: 50%;
+  font-size: 21px;
+  color: var(--c-text-2);
+  background: var(--c-raised);
+  box-shadow: var(--shadow-card);
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4),
+    box-shadow 0.2s;
+}
+.social:hover,
+.social:focus-visible {
+  color: #fff;
+  background: var(--brand);
+  border-color: var(--brand);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px -6px var(--brand);
+}
+@media (prefers-reduced-motion: reduce) {
+  .social {
+    transition: none;
+  }
+  .social:hover,
+  .social:focus-visible {
+    transform: none;
+  }
+}
 .profile-footer {
   display: flex;
   justify-content: space-between;

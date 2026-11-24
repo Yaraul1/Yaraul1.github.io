@@ -14,10 +14,10 @@ export const portfolio = {
    * without tracking parameters.
    */
   socials: {
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/in/yaroslav-yuferev/",
     telegram: "",
     instagram: "",
-    github: ""
+    github: "https://github.com/Yaraul1"
   },
   /**
    * Mail window. Messages and attachments (up to 10 MB) go through FormSubmit:

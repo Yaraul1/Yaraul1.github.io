@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, type CSSProperties } from "react";
 import {
   portfolio,
   openPortfolioApp,
@@ -8,6 +8,7 @@ import {
   type AboutSystem,
   type Localized
 } from "~/configs/portfolio";
+import { filledSocials } from "~/configs/socials";
 import type { Lang } from "~/i18n/lang";
 import { useLang, useT } from "~/i18n/useLang";
 import LegalHubCase from "~/components/legalhub/LegalHubCase";
@@ -38,6 +39,32 @@ const pick = (v: string | Localized<string>, lang: Lang) =>
 function projectTitle(caseId: string, lang: Lang) {
   const p = portfolio.projects.find((x) => x.caseId === caseId);
   return p ? pick(p.title, lang) : caseId;
+}
+
+/** Profile links (LinkedIn, GitHub…) as round icons; only the filled ones. */
+function SocialLinks() {
+  const t = useT();
+  const items = filledSocials();
+  if (!items.length) return null;
+  return (
+    <ul className="socials" aria-label={t.profile.socials}>
+      {items.map((s) => (
+        <li key={s.id}>
+          <a
+            className="social"
+            href={portfolio.socials[s.id]}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={s.name}
+            title={s.name}
+            style={{ "--brand": s.brand } as CSSProperties}
+          >
+            <span className={s.icon} aria-hidden="true" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 /** One system in the resume: its icon, what my part was, the result; opens its case. */
@@ -209,6 +236,7 @@ export function Profile() {
               {t.profile.downloadResume}
             </a>
           )}
+          <SocialLinks />
         </div>
         <AboutResume />
         <div className="profile-footer">
