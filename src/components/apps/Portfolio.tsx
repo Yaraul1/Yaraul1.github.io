@@ -1,4 +1,4 @@
-import { Fragment, type CSSProperties } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   portfolio,
   openPortfolioApp,
@@ -95,6 +95,132 @@ function SystemRows({ items }: { items: AboutSystem[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/** Where "About me" scrolls: the main column, or the whole window when it is narrow. */
+function aboutScroller(from: HTMLElement) {
+  const main = from.closest<HTMLElement>(".profile-main");
+  const app = from.closest<HTMLElement>(".profile-app");
+  if (!main || !app) return null;
+  return getComputedStyle(main).overflowY === "visible" ? app : main;
+}
+
+/**
+ * The resume sits under the fold of "About me" and nothing hinted at it. A pulsing pill at the
+ * bottom says so and scrolls to it; if nothing happens for 5 s, a drawn cursor comes to the pill
+ * and scrolls a little by itself, once. It goes away as soon as the window is scrolled.
+ */
+function ScrollHint() {
+  const t = useT();
+  const dock = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  const [cursor, setCursor] = useState(false);
+  // a round arrow instead of the pill when the buttons leave no room next to it
+  const [compact, setCompact] = useState(false);
+  useEffect(() => {
+    const el = dock.current;
+    const app = el?.closest<HTMLElement>(".profile-app");
+    // not on the desktop copy on the laptop screen
+    if (!el || !app || el.closest(".is-preview")) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    let peeked = false;
+    let idle = 0;
+    let press = 0;
+    const update = () => {
+      const s = aboutScroller(el);
+      if (!s) return;
+      const more = s.scrollTop < 40 && s.scrollHeight - s.clientHeight > 80;
+      setShown(more);
+      // the hint sits 20–60px above the bottom, at the right: does the row of buttons reach there?
+      const row = s.querySelector(".profile-actions");
+      if (row) {
+        const box = s.getBoundingClientRect();
+        const items = [...row.children].map((c) => c.getBoundingClientRect());
+        const right = Math.max(...items.map((r) => r.right));
+        const bottom = Math.max(...items.map((r) => r.bottom));
+        const sameBand = bottom > box.bottom - 64;
+        setCompact(sameBand && box.right - right < 210);
+      }
+      // the nudge happens once: back at the top, the pill comes back without the cursor
+      if (!more) setCursor(false);
+    };
+    // 5 s without a scroll, click or key: the cursor shows where to go and scrolls a bit
+    const arm = () => {
+      window.clearTimeout(idle);
+      if (reduce || peeked) return;
+      idle = window.setTimeout(() => {
+        const s = aboutScroller(el);
+        if (!s || s.scrollTop >= 40 || s.scrollHeight - s.clientHeight <= 80) return;
+        peeked = true;
+        setCursor(true);
+        press = window.setTimeout(
+          () => s.scrollBy({ top: 260, behavior: "smooth" }),
+          1250
+        );
+      }, 5000);
+    };
+    const onScroll = () => {
+      update();
+      arm();
+    };
+    update();
+    arm();
+    const resize = new ResizeObserver(update);
+    resize.observe(app);
+    app.addEventListener("scroll", onScroll, { capture: true, passive: true });
+    for (const type of ["pointerdown", "wheel", "keydown", "touchstart"])
+      app.addEventListener(type, arm, { passive: true });
+    return () => {
+      window.clearTimeout(idle);
+      window.clearTimeout(press);
+      resize.disconnect();
+      app.removeEventListener("scroll", onScroll, { capture: true });
+      for (const type of ["pointerdown", "wheel", "keydown", "touchstart"])
+        app.removeEventListener(type, arm);
+    };
+  }, []);
+
+  const go = () => {
+    const el = dock.current;
+    const s = el && aboutScroller(el);
+    const target = el?.closest(".profile-main")?.querySelector(".about-stats");
+    if (!s || !target) return;
+    const top =
+      target.getBoundingClientRect().top -
+      s.getBoundingClientRect().top +
+      s.scrollTop -
+      24;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    s.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+  };
+
+  return (
+    <div className="scroll-hint-dock" ref={dock}>
+      {shown && (
+        <button
+          className={`scroll-hint ${compact ? "is-compact" : ""}`}
+          onClick={go}
+          aria-label={t.profile.scrollHint}
+          title={t.profile.scrollHint}
+        >
+          {!compact && t.profile.scrollHint}
+          {/* three chevrons that light up in turn, top to bottom */}
+          <svg className="scroll-hint-arrows" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 5.5l5 4 5-4" />
+            <path d="M7 10l5 4 5-4" />
+            <path d="M7 14.5l5 4 5-4" />
+          </svg>
+          {cursor && (
+            <span className="scroll-hint-cursor" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 2.5l13.5 9.3-6 1.2 3.8 7.4-2.9 1.5-3.8-7.5L5 19z" />
+              </svg>
+            </span>
+          )}
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -264,6 +390,7 @@ export function Profile() {
             {t.profile.tryTerminal} <span>⌘</span>
           </button>
         </div>
+        <ScrollHint />
       </section>
     </main>
   );

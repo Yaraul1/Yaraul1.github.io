@@ -827,6 +827,168 @@ h2 {
   overflow: auto;
   padding: 52px 52px 28px;
 }
+/* "Resume below": pinned to the bottom of the visible part of "About me" (a zero-height
+   sticky dock at the end of the column), gone once the window is scrolled */
+.scroll-hint-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  flex: none;
+  /* bottom right: the buttons above it are left-aligned, so it covers nothing */
+  justify-content: flex-end;
+  height: 0;
+  pointer-events: none;
+}
+.scroll-hint {
+  position: relative;
+  top: -60px;
+  right: -12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px 0 18px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--c-text);
+  background: color-mix(in srgb, var(--c-raised) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-card);
+  pointer-events: auto;
+  cursor: pointer;
+  animation:
+    hint-in 0.4s ease both,
+    hint-pulse 2s ease-out 0.6s infinite;
+}
+/* the round version: filled like the main button, so it doesn't read as a profile link */
+.scroll-hint.is-compact {
+  top: -56px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  justify-content: center;
+  border-color: var(--c-accent);
+  color: var(--c-accent-text);
+  background: var(--c-accent);
+}
+.scroll-hint.is-compact .scroll-hint-arrows {
+  width: 22px;
+  height: 22px;
+  color: inherit;
+}
+.scroll-hint:hover {
+  border-color: var(--c-accent);
+}
+.scroll-hint:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+}
+/* three chevrons, centred in the box (they span y 5.5–18.5 of 24); they don't move,
+   they light up one after another, top to bottom, like a wave going down */
+.scroll-hint-arrows {
+  display: block;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--c-accent);
+}
+.scroll-hint-arrows path {
+  opacity: 0.25;
+  animation: hint-chevron 1.5s ease-in-out infinite;
+}
+.scroll-hint-arrows path:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.scroll-hint-arrows path:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes hint-chevron {
+  0%,
+  70%,
+  100% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+/* the drawn cursor of the 5-second nudge: comes in from the side, presses the pill */
+.scroll-hint-cursor {
+  position: absolute;
+  top: 55%;
+  left: 58%;
+  width: 34px;
+  height: 34px;
+  pointer-events: none;
+  animation: hint-cursor 1.6s cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+.scroll-hint-cursor svg {
+  width: 100%;
+  height: 100%;
+  fill: #111;
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 3px 5px #00000059);
+}
+@keyframes hint-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes hint-pulse {
+  0% {
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 0 color-mix(in srgb, var(--c-accent) 45%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 12px transparent;
+  }
+}
+@keyframes hint-cursor {
+  0% {
+    opacity: 0;
+    transform: translate(150px, 90px);
+  }
+  20% {
+    opacity: 1;
+  }
+  68% {
+    transform: translate(0, 0) scale(1);
+  }
+  76% {
+    transform: translate(0, 0) scale(0.82);
+  }
+  86%,
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint,
+  .scroll-hint-arrows path {
+    animation: none;
+  }
+  .scroll-hint-arrows path {
+    opacity: 1;
+  }
+}
 /* the photo sits to the left of the name, as tall as its two lines */
 .profile-head {
   display: flex;
