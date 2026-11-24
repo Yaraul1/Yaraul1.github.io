@@ -79,6 +79,8 @@ const ru = {
   },
   profile: {
     sidebar: "Портфолио",
+    search: "Поиск",
+    accountName: "Ярослав Юферев",
     openProjects: "Открыть проекты",
     downloadResume: "Скачать резюме",
     socials: "Профили",
@@ -291,6 +293,8 @@ const en: UIStrings = {
   },
   profile: {
     sidebar: "Portfolio",
+    search: "Search",
+    accountName: "Yaroslav Yuferev",
     openProjects: "View projects",
     downloadResume: "Download CV",
     socials: "Profiles",

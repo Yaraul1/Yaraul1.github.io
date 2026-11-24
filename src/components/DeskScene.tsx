@@ -43,6 +43,9 @@ type LaptopGLTF = {
 
 const FOV = 30;
 const ENTER_SECONDS = 1.5;
+/** Canvas pixel ratio at rest; during a camera flight it drops (see Rig), motion hides it. */
+const DPR: [number, number] = [1, 2];
+const FLIGHT_DPR = 1.25;
 /** Keep in sync with RETURN_MS in pages/Workspace.tsx. */
 const RETURN_SECONDS = 1.6;
 
@@ -492,7 +495,8 @@ function Shadows({ theme, layout }: { theme: Theme; layout: Layout }) {
       // re-accumulate when the light or the arrangement changes
       key={`${theme}-${layout}`}
       temporal={true}
-      frames={90}
+      // spread over the first frames after load; fewer frames = the desk is calm sooner
+      frames={45}
       alphaTest={1.12}
       opacity={mood.shadowOpacity}
       color={mood.shadowColour}
@@ -655,6 +659,12 @@ function CameraRig({
   frame: Framing;
 }) {
   const camera = useThree((s) => s.camera);
+  const setDpr = useThree((s) => s.setDpr);
+  // A flight redraws the whole retina-size canvas every frame: draw fewer pixels meanwhile.
+  const flying = entering || !!returning;
+  useEffect(() => {
+    setDpr(flying ? Math.min(window.devicePixelRatio, FLIGHT_DPR) : DPR);
+  }, [flying, setDpr]);
   const pointer = useThree((s) => s.pointer);
   const invalidate = useThree((s) => s.invalidate);
   const state = useMemo(
@@ -829,7 +839,7 @@ export default function DeskScene(props: SceneProps) {
     <Canvas
       shadows
       frameloop="demand"
-      dpr={[1, 2]}
+      dpr={DPR}
       camera={{ fov: FOV, near: 0.5, far: 140, position: [9, 9, 20] }}
       gl={{
         antialias: true,

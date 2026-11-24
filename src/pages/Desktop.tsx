@@ -150,12 +150,16 @@ export default function Desktop({ preview = false }: { preview?: boolean }) {
         setFull(null);
       }
     };
+    // the search field in the About window's sidebar opens the same search as ⌘K
+    const onSearch = () => setSearch(true);
     window.addEventListener("yar:open", onOpen);
+    window.addEventListener("yar:search", onSearch);
     window.addEventListener("keydown", onKey);
     document.addEventListener("fullscreenchange", onFullscreenChange);
     document.addEventListener("webkitfullscreenchange", onFullscreenChange);
     return () => {
       window.removeEventListener("yar:open", onOpen);
+      window.removeEventListener("yar:search", onSearch);
       window.removeEventListener("keydown", onKey);
       document.removeEventListener("fullscreenchange", onFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", onFullscreenChange);

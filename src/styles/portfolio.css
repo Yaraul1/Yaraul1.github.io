@@ -699,27 +699,93 @@ h2 {
   background: var(--c-sidebar);
   border-right: 1px solid var(--c-line);
 }
-.monogram {
-  width: 56px;
-  height: 56px;
-  margin-left: 8px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+/* the top of the sidebar, like macOS System Settings: a search field, then the account */
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--c-text-3);
+  background: var(--c-sunken);
+  cursor: text;
+}
+.sidebar-search > span:first-child {
+  font-size: 15px;
+}
+.sidebar-search kbd {
+  margin-left: auto;
+  font: inherit;
+  font-size: 11.5px;
+  opacity: 0.8;
+}
+.sidebar-search:hover {
+  border-color: var(--c-line-strong);
+}
+.sidebar-search:focus-visible,
+.sidebar-account:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 1px;
+}
+.sidebar-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px 10px 8px 8px;
+  border-radius: 10px;
+  text-align: left;
+  color: var(--c-text);
+}
+.sidebar-account:hover {
+  background: var(--c-hover);
+}
+.sidebar-account.selected {
   color: var(--c-accent-text);
   background: var(--c-accent);
-  box-shadow:
-    inset 0 1px 0 #ffffff33,
-    0 2px 6px #00000026;
+}
+.sidebar-account img,
+.sidebar-account-initials {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--c-sunken);
+}
+.sidebar-account-initials {
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--c-text-2);
+}
+.sidebar-account-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sidebar-account-text strong {
+  overflow: hidden;
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.sidebar-account-text small {
+  font-size: 12.5px;
+  opacity: 0.75;
 }
 .sidebar-label {
   font-size: 12px;
   font-weight: 600;
   color: var(--c-text-3);
-  margin: 26px 10px 6px;
+  margin: 20px 10px 6px;
 }
 .sidebar-item {
   width: 100%;

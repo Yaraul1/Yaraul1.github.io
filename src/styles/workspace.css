@@ -10,8 +10,7 @@
   font-family: var(--font-ui);
   /* seamless studio sweep: a soft glow behind the desk that dissolves into the page colour
      (eased stops, so the falloff has no visible edge) */
-  background:
-    radial-gradient(
+  background: radial-gradient(
       66% 56% at 50% 60%,
       var(--c-raised) 0%,
       color-mix(in srgb, var(--c-raised) 82%, transparent) 18%,
@@ -40,7 +39,13 @@
     transparent 100%
   );
   --floor: linear-gradient(to top, transparent 0%, #0005 4%, #000b 8.5%, #000 14%);
-  --round: radial-gradient(130% 100% at 50% 56%, #000 62%, #000a 80%, #0004 92%, transparent 100%);
+  --round: radial-gradient(
+    130% 100% at 50% 56%,
+    #000 62%,
+    #000a 80%,
+    #0004 92%,
+    transparent 100%
+  );
   -webkit-mask-image: var(--edge), var(--floor), var(--round);
   mask-image: var(--edge), var(--floor), var(--round);
   -webkit-mask-composite: source-in, source-in;
@@ -328,8 +333,7 @@
   background: #6f6556 url("/wallpapers/macos-27-golden-gate.jpg") center / cover;
   transition:
     opacity 0.75s ease 0.1s,
-    transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 0.75s ease;
+    transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .macbook-lock::before {
   content: "";
@@ -530,10 +534,10 @@
 .macbook-lock.is-hovered .macbook-lock-avatar {
   transform: scale(1.06);
 }
+/* no blur filter here: on a layer that the camera is flying into, it costs frames */
 .macbook-lock.is-unlocking {
   opacity: 0;
   transform: scale(1.05);
-  filter: blur(10px);
 }
 .macbook-lock.is-unlocking .macbook-lock-clock {
   transform: translateY(-40px);

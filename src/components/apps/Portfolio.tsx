@@ -181,11 +181,30 @@ export function Profile() {
   return (
     <main className="profile-app app-scroll">
       <aside className="profile-sidebar">
-        <div className="monogram">YY</div>
-        <p className="sidebar-label">{t.profile.sidebar}</p>
-        <button className="sidebar-item selected">
-          <img src="/icons/profile.png" alt="" /> <span>{t.apps.profile}</span>
+        {/* like the top of macOS System Settings: search, then the account card,
+            which is this page ("About me") */}
+        <button
+          className="sidebar-search"
+          onClick={() => window.dispatchEvent(new Event("yar:search"))}
+        >
+          <span className="i-ph-magnifying-glass" aria-hidden="true" />
+          <span>{t.profile.search}</span>
+          <kbd>⌘K</kbd>
         </button>
+        <button className="sidebar-account selected" aria-current="page">
+          {__PHOTO_URL__ ? (
+            <img src={__PHOTO_URL__} alt="" />
+          ) : (
+            <span className="sidebar-account-initials" aria-hidden="true">
+              YY
+            </span>
+          )}
+          <span className="sidebar-account-text">
+            <strong>{t.profile.accountName}</strong>
+            <small>{portfolio.role}</small>
+          </span>
+        </button>
+        <p className="sidebar-label">{t.profile.sidebar}</p>
         <button className="sidebar-item" onClick={() => openPortfolioApp("projects")}>
           <img src="/icons/projects.png" alt="" /> <span>{t.apps.projects}</span>
         </button>
