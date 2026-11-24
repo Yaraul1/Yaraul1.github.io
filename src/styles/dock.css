@@ -2,9 +2,9 @@
   position: fixed;
   z-index: 80;
   left: 50%;
-  /* closer to the edge in a short window; --os-dock-lift raises it above the system Dock
-     when that one covers the bottom of the page (useOsDockInset) */
-  bottom: calc(clamp(14px, 3.6dvh, 30px) + var(--os-dock-lift, 0px));
+  /* closer to the edge in a short window; --os-dock keeps it above the system Dock when
+     that one covers the bottom of the page (useOsDockInset) */
+  bottom: calc(clamp(14px, 3.6dvh, 30px) + var(--os-dock, 0px));
   transform: translateX(-50%);
   width: max-content;
   max-width: calc(100vw - 28px);
@@ -125,7 +125,7 @@
 }
 @media (max-width: 639px) {
   .yar-dock {
-    bottom: calc(clamp(14px, 3.4dvh, 28px) + var(--os-dock-lift, 0px));
+    bottom: calc(clamp(14px, 3.4dvh, 28px) + var(--os-dock, 0px));
     max-width: calc(100vw - 20px);
   }
   .yar-dock ul {

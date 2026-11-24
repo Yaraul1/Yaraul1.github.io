@@ -62,7 +62,11 @@ export default function Terminal() {
         output = input.slice(5);
         break;
       case "open":
-        if (["profile", "projects", "contact", "readme", "terminal"].includes(args[0])) {
+        if (
+          ["profile", "projects", "assistant", "contact", "readme", "terminal"].includes(
+            args[0]
+          )
+        ) {
           openPortfolioApp(args[0]);
           output = t.terminal.opening(args[0]);
         } else {

@@ -147,6 +147,10 @@ const Window = (props: WindowProps) => {
     return () => window.clearTimeout(timer);
   }, [props.full, props.max]);
 
+  // The size the window wants: what it opened with or what the visitor dragged it to. When
+  // the free area shrinks the window gives way, and when it grows back so does the window.
+  const preferred = useRef({ width: initWidth, height: props.height || 400 });
+
   // Keep the window on screen when the browser is resized or the free area changes
   // (e.g. the system Dock now covers the bottom of the page).
   const previousViewport = useRef({ width: winWidth, height: winHeight, reservedHeight });
@@ -160,8 +164,8 @@ const Window = (props: WindowProps) => {
       return;
     previousViewport.current = { width: winWidth, height: winHeight, reservedHeight };
     setState((current) => {
-      const width = Math.min(winWidth - 32, current.width);
-      const height = Math.min(winHeight - reservedHeight, current.height);
+      const width = Math.min(winWidth - 32, preferred.current.width);
+      const height = Math.min(winHeight - reservedHeight, preferred.current.height);
       return {
         width,
         height,
@@ -333,6 +337,10 @@ const Window = (props: WindowProps) => {
       position={{ x, y }}
       onDragStop={(e, d) => setState({ ...state, x: d.x, y: d.y })}
       onResizeStop={(e, direction, ref, delta, position) => {
+        preferred.current = {
+          width: parseInt(ref.style.width),
+          height: parseInt(ref.style.height)
+        };
         setState({
           ...state,
           width: parseInt(ref.style.width),

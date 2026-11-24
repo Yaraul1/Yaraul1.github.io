@@ -212,22 +212,35 @@ export default function Paper({
             <div className="lh-sign-row">
               <div className="lh-sign-cell">
                 <span>Генеральный директор</span>
-                <span className="lh-sign-line">_____________ / Демо А. А. /</span>
+                <span className="lh-sign-line">
+                  <span className="lh-sign-blank" /> / Демо А. А. /
+                </span>
               </div>
               <div
                 className={`lh-sign-cell lh-zone ${observe ? "is-seen" : ""} ${resolve ? "is-chosen" : ""}`}
               >
                 <span>Директор студии</span>
-                <span className="lh-sign-line">_____________ / Пример Б. Б. /</span>
+                <span className="lh-sign-line">
+                  {/* the middle of this line is where the AI puts the seal: a tick marks
+                      the spot, then the signature and the seal land on it */}
+                  <span className="lh-sign-blank">
+                    {resolve && (
+                      <span className="lh-sign-spot">
+                        <span className="i-ph-check-bold" />
+                      </span>
+                    )}
+                    {signing && stamped && (
+                      <>
+                        <Signature className="lh-land" />
+                        <Seal className="lh-land lh-land-late" />
+                      </>
+                    )}
+                  </span>{" "}
+                  / Пример Б. Б. /
+                </span>
                 {observe && (
                   <span className="lh-ai-tag">
                     {resolve ? labels.signChosen : labels.signSeen}
-                  </span>
-                )}
-                {signing && stamped && (
-                  <span className="lh-sign-marks">
-                    <Signature className="lh-land" />
-                    <Seal className="lh-land lh-land-late" />
                   </span>
                 )}
               </div>

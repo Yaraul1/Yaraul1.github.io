@@ -1,6 +1,7 @@
 import type { AppsData } from "~/types";
 import { Profile, Projects, Readme } from "~/components/apps/Portfolio";
 import Mail from "~/components/apps/Mail";
+import Assistant from "~/components/apps/Assistant";
 import Terminal from "~/components/apps/Terminal";
 const apps: AppsData[] = [
   {
@@ -34,6 +35,17 @@ const apps: AppsData[] = [
     x: 40,
     y: 20,
     content: <Terminal />
+  },
+  {
+    id: "assistant",
+    desktop: true,
+    toolbar: true,
+    img: "/icons/assistant.png",
+    width: 760,
+    height: 640,
+    x: 55,
+    y: 10,
+    content: <Assistant />
   },
   {
     id: "contact",

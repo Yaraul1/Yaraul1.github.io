@@ -1,8 +1,8 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useWindowControls } from "~/components/windowContext";
 import { useLang } from "~/i18n/useLang";
-import CodeBlock from "~/components/legalhub/CodeBlock";
 import { sectionObserverMargin } from "~/components/legalhub/content";
+import { takePendingSection } from "~/configs/portfolio";
 import Bridge from "./Bridge";
 import { demos } from "./demos";
 import CaseArt from "./CaseArt";
@@ -21,8 +21,7 @@ type Section =
   | "inside"
   | "architecture"
   | "bridge"
-  | "decisions"
-  | "code";
+  | "decisions";
 
 /**
  * A project case study, drawn from data (see ./data): the same chapters and look as the
@@ -47,20 +46,18 @@ export default function ProjectCase({
   const Demo = demos[data.id];
   const sections: Section[] = [
     "overview",
-    "flow",
+    ...(c.steps?.length ? (["flow"] as const) : []),
     ...(Demo ? (["demo"] as const) : []),
     ...(data.site ? (["site"] as const) : []),
     "inside",
     "architecture",
     ...(data.bridge ? (["bridge"] as const) : []),
-    "decisions",
-    "code"
+    "decisions"
   ];
   const [current, setCurrent] = useState("lh-overview");
   const [stage, setStage] = useState(0);
   const [node, setNode] = useState(data.firstNode);
   const [open, setOpen] = useState<number | null>(null);
-  const [code, setCode] = useState(0);
   const { architecture } = c;
   const allNodes = [
     ...architecture.request,
@@ -70,16 +67,18 @@ export default function ProjectCase({
   const selectedNode = allNodes.find((n) => n.id === node) ?? allNodes[0];
   const stageIndex = Math.min(stage, c.stages.length - 1);
   const activeStage = c.stages[stageIndex];
-  const sampleIndex = Math.min(code, data.code.length - 1);
-  const sample = data.code[sampleIndex];
 
-  // a new case opened in the same window starts from the top
+  // a new case opened in the same window starts from the top, or on the chapter it was
+  // asked for (one demo sends a tender to another one's demo)
   useEffect(() => {
     scroller.current?.scrollTo({ top: 0 });
     setStage(0);
     setNode(data.firstNode);
     setOpen(null);
-    setCode(0);
+    const section = takePendingSection();
+    // two frames: the chapters above the target are laid out by then
+    if (section)
+      requestAnimationFrame(() => requestAnimationFrame(() => go(section, true)));
   }, [data]);
 
   useEffect(() => {
@@ -122,7 +121,7 @@ export default function ProjectCase({
     });
   }, [current]);
 
-  function go(id: string) {
+  function go(id: string, instant = false) {
     const root = scroller.current;
     const section = root?.querySelector<HTMLElement>(`#lh-${id}`);
     if (!root || !section) return;
@@ -139,7 +138,7 @@ export default function ProjectCase({
       covered -
       (frame ? 24 : 0);
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    root.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+    root.scrollTo({ top, behavior: reduce || instant ? "auto" : "smooth" });
   }
 
   // chapters are numbered in order and alternate their background, whatever is present
@@ -261,60 +260,64 @@ export default function ProjectCase({
         </div>
       </section>
 
-      <Chapter
-        id="problem"
-        {...chapter()}
-        title={t.chapters.problem.title}
-        lead={t.chapters.problem.lead}
-      >
-        <div className="lh-ba">
-          <div className="lh-ba-card is-before">
-            <h3>{t.before}</h3>
-            <ul>
-              {c.problem.before.map((text) => (
-                <li key={text}>
-                  <span className="i-ph-x-circle-fill" aria-hidden="true" />
-                  {text}
-                </li>
-              ))}
-            </ul>
+      {c.problem && (
+        <Chapter
+          id="problem"
+          {...chapter()}
+          title={t.chapters.problem.title}
+          lead={t.chapters.problem.lead}
+        >
+          <div className="lh-ba">
+            <div className="lh-ba-card is-before">
+              <h3>{t.before}</h3>
+              <ul>
+                {c.problem.before.map((text) => (
+                  <li key={text}>
+                    <span className="i-ph-x-circle-fill" aria-hidden="true" />
+                    {text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <span className="lh-ba-arrow" aria-hidden="true">
+              <span className="i-ph-arrow-right" />
+            </span>
+            <div className="lh-ba-card is-after">
+              <h3>{t.after}</h3>
+              <ul>
+                {c.problem.after.map((text) => (
+                  <li key={text}>
+                    <span className="i-ph-check-circle-fill" aria-hidden="true" />
+                    {text}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <span className="lh-ba-arrow" aria-hidden="true">
-            <span className="i-ph-arrow-right" />
-          </span>
-          <div className="lh-ba-card is-after">
-            <h3>{t.after}</h3>
-            <ul>
-              {c.problem.after.map((text) => (
-                <li key={text}>
-                  <span className="i-ph-check-circle-fill" aria-hidden="true" />
-                  {text}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Chapter>
+        </Chapter>
+      )}
 
-      <Chapter
-        id="flow"
-        {...chapter()}
-        title={t.chapters.flow.title}
-        lead={t.chapters.flow.lead}
-      >
-        <ol className={`lh-steps-row ${c.steps.length === 3 ? "is-three" : ""}`}>
-          {c.steps.map((s, i) => (
-            <li key={s.title}>
-              <span className="lh-step-icon" aria-hidden="true">
-                <span className={s.icon} />
-              </span>
-              <span className="lh-step-n">{i + 1}</span>
-              <h3>{s.title}</h3>
-              <p>{s.text}</p>
-            </li>
-          ))}
-        </ol>
-      </Chapter>
+      {c.steps?.length ? (
+        <Chapter
+          id="flow"
+          {...chapter()}
+          title={t.chapters.flow.title}
+          lead={t.chapters.flow.lead}
+        >
+          <ol className={`lh-steps-row ${c.steps.length === 3 ? "is-three" : ""}`}>
+            {c.steps.map((s, i) => (
+              <li key={s.title}>
+                <span className="lh-step-icon" aria-hidden="true">
+                  <span className={s.icon} />
+                </span>
+                <span className="lh-step-n">{i + 1}</span>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </li>
+            ))}
+          </ol>
+        </Chapter>
+      ) : null}
 
       {Demo && (
         <Chapter
@@ -489,28 +492,6 @@ export default function ProjectCase({
             </div>
           ))}
         </div>
-      </Chapter>
-
-      <Chapter
-        id="code"
-        {...chapter()}
-        title={t.chapters.code.title}
-        lead={t.chapters.code.lead}
-      >
-        <div className="lh-code-tabs" role="tablist" aria-label={t.codeTabs}>
-          {c.code.map((s, i) => (
-            <button
-              key={s.label}
-              role="tab"
-              aria-selected={sampleIndex === i}
-              onClick={() => setCode(i)}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-        <p className="lh-code-explanation">{c.code[sampleIndex]?.explanation}</p>
-        <CodeBlock code={sample.code} language={sample.language} path={sample.path} />
       </Chapter>
 
       <footer className="lh-case-footer">

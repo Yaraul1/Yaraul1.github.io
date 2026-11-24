@@ -20,15 +20,14 @@ const ru = {
     inside: "Внутри",
     architecture: "Архитектура",
     bridge: "Связка",
-    decisions: "Решения",
-    code: "Код"
+    decisions: "Решения"
   },
   chapters: {
     problem: { title: "Задача", lead: "Что было до проекта и что стало." },
     flow: { title: "Как пользоваться", lead: "Путь пользователя по шагам." },
     demo: {
       title: "Попробуйте сами",
-      lead: "Интерфейс как в настоящем приложении, данные вымышленные. Всё можно нажимать."
+      lead: "Упрощённый макет на вымышленных данных. Всё можно нажимать."
     },
     site: {
       title: "Живой сайт",
@@ -36,8 +35,7 @@ const ru = {
     },
     inside: { title: "Что внутри", lead: "Что происходит с данными, этап за этапом." },
     architecture: { title: "Архитектура", lead: "Из чего состоит система." },
-    decisions: { title: "Решения", lead: "Что было непросто и как это решено." },
-    code: { title: "Код", lead: "Ключевые фрагменты с пояснениями." }
+    decisions: { title: "Решения", lead: "Что было непросто и как это решено." }
   },
   before: "Было",
   after: "Стало",
@@ -47,8 +45,7 @@ const ru = {
   more: "Подробнее",
   less: "Свернуть",
   numbers: "В цифрах",
-  stack: "Стек",
-  codeTabs: "Фрагменты кода"
+  stack: "Стек"
 };
 
 type CaseUi = typeof ru;
@@ -73,15 +70,14 @@ const en: CaseUi = {
     inside: "Inside",
     architecture: "Architecture",
     bridge: "Connection",
-    decisions: "Decisions",
-    code: "Code"
+    decisions: "Decisions"
   },
   chapters: {
     problem: { title: "The problem", lead: "What it was like before, and after." },
     flow: { title: "How to use it", lead: "The user's path, step by step." },
     demo: {
       title: "Try it yourself",
-      lead: "The interface of the real app with made-up data. Everything is clickable."
+      lead: "A simplified mock-up with made-up data. Everything is clickable."
     },
     site: {
       title: "The live site",
@@ -89,8 +85,7 @@ const en: CaseUi = {
     },
     inside: { title: "Inside", lead: "What happens to the data, stage by stage." },
     architecture: { title: "Architecture", lead: "What the system is made of." },
-    decisions: { title: "Decisions", lead: "What was hard and how it was solved." },
-    code: { title: "Code", lead: "Key fragments, explained." }
+    decisions: { title: "Decisions", lead: "What was hard and how it was solved." }
   },
   before: "Before",
   after: "After",
@@ -100,8 +95,7 @@ const en: CaseUi = {
   more: "More",
   less: "Less",
   numbers: "In numbers",
-  stack: "Stack",
-  codeTabs: "Code samples"
+  stack: "Stack"
 };
 
 export const caseUi: Record<Lang, CaseUi> = { ru, en };

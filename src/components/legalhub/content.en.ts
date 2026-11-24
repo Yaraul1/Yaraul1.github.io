@@ -31,7 +31,7 @@ export const caseEn: CaseText = {
     after: [
       "A whole batch is uploaded in one go",
       "The service finds the spot and the signatory",
-      "Not sure? It flags an error instead of stamping"
+      "Not sure? It doesn't stamp — it says what's missing on the document"
     ]
   },
 
@@ -65,8 +65,7 @@ export const caseEn: CaseText = {
         title: "Queue",
         tool: "API → PostgreSQL",
         detail:
-          "The original goes to MinIO and a file row with status pending appears in the database. A free worker picks it up.",
-        code: 0
+          "The original goes to MinIO and a file row with status pending appears in the database. A free worker picks it up."
       },
       {
         icon: "i-ph-file-pdf",
@@ -87,16 +86,14 @@ export const caseEn: CaseText = {
         title: "Code decides",
         tool: "resolver",
         detail:
-          "Rules discard the noise and pick a stamp template only when it's unambiguous.",
-        code: 2
+          "Rules discard the noise and pick a stamp template only when it's unambiguous."
       },
       {
         icon: "i-ph-seal-check",
         title: "Stamp",
         tool: "pypdf · reportlab · img2pdf",
         detail:
-          "Signature and seal land on the found spot, kept inside the page. The result is a PDF that can't be edited.",
-        code: 3
+          "Signature and seal land on the found spot, kept inside the page. The result is a PDF that can't be edited."
       }
     ],
     certification: [
@@ -105,8 +102,7 @@ export const caseEn: CaseText = {
         title: "Queue",
         tool: "API → PostgreSQL",
         detail:
-          "The original goes to MinIO and a file row with status pending appears in the database. A free worker picks it up.",
-        code: 0
+          "The original goes to MinIO and a file row with status pending appears in the database. A free worker picks it up."
       },
       {
         icon: "i-ph-file-pdf",
@@ -133,8 +129,7 @@ export const caseEn: CaseText = {
         title: "Stamp",
         tool: "Pillow · img2pdf",
         detail:
-          "The “true copy” template goes on every page, and the pages are assembled into a PDF.",
-        code: 1
+          "The “true copy” template goes on every page, and the pages are assembled into a PDF."
       }
     ]
   },
@@ -196,7 +191,7 @@ export const caseEn: CaseText = {
         id: "worker",
         name: "Worker",
         tech: "Python 3.13 · separate process",
-        text: "Claims up to 25 files, processes them one by one, records the result or the error. Scales with more processes."
+        text: "Claims up to 25 files, processes them one by one, records the result or what's missing on the document. Scales with more processes."
       },
       {
         id: "libreoffice",
@@ -239,12 +234,6 @@ export const caseEn: CaseText = {
       text: "Blank margins are trimmed. If the DPI gives 15–120 mm, that's used; otherwise 19% of the page's short edge (about 40 mm on A4)."
     },
     {
-      icon: "i-ph-bug",
-      title: "Disappearing pages",
-      summary: "garbage=4 → garbage=3",
-      text: "Stamping one page blanked others: PyMuPDF's optimisation merged identical page objects."
-    },
-    {
       icon: "i-ph-gauge",
       title: "No wasted memory",
       summary: "Streamed uploads, PDFs in ranges",
@@ -253,44 +242,16 @@ export const caseEn: CaseText = {
   ],
 
   quality: [
-    { area: "Backend", value: "80", detail: "tests: resolver, stamp sizing, queue, API" },
-    { area: "Frontend", value: "53", detail: "tests: Vitest and Testing Library" },
-    { area: "CI", value: "4", detail: "checks on push: ruff ×2, mypy, pytest" },
-    { area: "Code", value: "≈20k", detail: "lines, 20 endpoints, 16 migrations" }
+    { area: "Workflows", value: "2", detail: "signature with seal, and “true copy”" },
+    { area: "API", value: "20", detail: "endpoints" },
+    { area: "Database", value: "16", detail: "Alembic migrations" },
+    { area: "Code", value: "≈20k", detail: "lines of Python and TypeScript" }
   ],
 
   nextSteps: [
     "Stream pages instead of keeping them all in memory",
     "Translate every error for the user",
     "Respect templates' validity dates"
-  ],
-
-  code: [
-    {
-      label: "Queue",
-      explanation:
-        "The worker claims a batch of files. SKIP LOCKED stops two processes taking the same file."
-    },
-    {
-      label: "Done / error",
-      explanation:
-        "The result is written in its own transaction; a batch closes once none of its files are in progress."
-    },
-    {
-      label: "Resolver",
-      explanation:
-        "The AI only describes the page — code decides. An ambiguous template is never chosen."
-    },
-    {
-      label: "Stamping",
-      explanation:
-        "Image pixels are converted to PDF points; the stamp is centred and kept inside the page."
-    },
-    {
-      label: "Interface",
-      explanation:
-        "A batch is one multipart request; the list is polled only while something is in progress."
-    }
   ],
 
   ui: {
@@ -300,8 +261,7 @@ export const caseEn: CaseText = {
       demo: "Demo",
       inside: "Inside",
       architecture: "Architecture",
-      decisions: "Decisions",
-      code: "Code"
+      decisions: "Decisions"
     },
     sectionsNav: "Case study sections",
     back: "Projects",
@@ -309,6 +269,7 @@ export const caseEn: CaseText = {
     collapse: "Exit full screen",
     expandTitle: "Full screen",
     collapseTitle: "Exit full screen (Esc)",
+    name: "Document Signing",
     kicker: "Case study · document automation",
     lead: "Upload a stack of contracts — get finished PDFs with a signature and seal, or a “true copy” stamp.",
     tryDemo: "Try the demo",
@@ -321,7 +282,7 @@ export const caseEn: CaseText = {
       flow: { title: "How it's used", lead: "One screen, four steps." },
       demo: {
         title: "Try it yourself",
-        lead: "A mock-up of the real interface: at the “AI looks” step you see what Dify found and what the code discarded. The sample contract is in Russian, like the service's documents."
+        lead: "A simplified mock-up with made-up data: at the “AI looks” step you see what Dify found and what the code discarded. The sample contract is in Russian, like the service's documents."
       },
       inside: {
         title: "What's inside",
@@ -331,8 +292,7 @@ export const caseEn: CaseText = {
         title: "Architecture",
         lead: "Requests answer at once; the heavy work happens in the worker."
       },
-      decisions: { title: "Decisions", lead: "What was tricky and how it was solved." },
-      code: { title: "Code", lead: "Real fragments from the project, without imports." }
+      decisions: { title: "Decisions", lead: "What was tricky and how it was solved." }
     },
     before: "Before",
     after: "After",
@@ -342,7 +302,7 @@ export const caseEn: CaseText = {
     step: (n, total) => `Stage ${n} of ${total}`,
     resolverTitle: "AI observes, code decides",
     resolverLead:
-      "The model never picks a stamp itself. An AI mistake becomes a clear processing error, not someone else's seal on a contract.",
+      "The model never picks a stamp itself. If something is missing on the document, the service says so — instead of putting someone else's seal on a contract.",
     seenTitle: "Dify saw",
     rulesTitle: "Rules",
     decidedTitle: "Code decided",
@@ -351,14 +311,30 @@ export const caseEn: CaseText = {
     lanes: { request: "Request", data: "Data", processing: "Processing" },
     more: "More",
     less: "Less",
-    checks: "Checks",
+    checks: "In numbers",
     nextTitle: "What's next",
-    codeTabs: "Code fragments",
     allProjects: "All projects",
     demo: {
-      badge: "demo",
-      user: "Demo lawyer",
-      userInitial: "L",
+      badge: "Demo · a made-up contract",
+      steps: ["Document", "Action", "Processing", "Result"],
+      hints: {
+        empty:
+          "Take the sample contract — the service finds where the signature and seal go by itself.",
+        signing:
+          "Click “Sign”. To see what happens with no place to sign, turn on “A document without a signature block”.",
+        certification:
+          "Choose a certification template and click “Certify” — the stamp goes on every page.",
+        running:
+          "Processing: the stages are on the right; the page shows what the AI found and what the code chose.",
+        doneSigning:
+          "Done: the signature and seal sit where the tick was. Switch “Before / After” or download the PDF.",
+        doneCert:
+          "Done: the “true copy” stamp is on every page. Switch “Before / After” or download the PDF.",
+        error:
+          "There's no place to sign — the service doesn't guess a stamp, it says what's missing on the document."
+      },
+      workflows: "Two workflows",
+      plan: "What happens",
       controls: "Processing controls",
       dropTitle: "Drop documents here",
       dropText: "PDF, Word, Excel or images, up to 30 MB",
@@ -367,31 +343,32 @@ export const caseEn: CaseText = {
       fileBase: "Contract_DEMO-001",
       pages: "2 pages",
       size: "48 KB",
-      fileState: { error: "error", done: "ready", busy: "processing" },
-      status: { done: "Ready", error: "Error", busy: "Processing", uploaded: "Uploaded" },
+      fileState: { error: "missing data", done: "ready", busy: "processing" },
+      status: {
+        done: "Ready",
+        error: "Missing data",
+        busy: "Processing",
+        uploaded: "Uploaded"
+      },
       action: "Action",
       signingNote:
         "The signatory and the signature spot come from the document — nothing to choose.",
-      simulateError: "Simulate an error",
+      simulateError: "A document without a signature block",
       simulateErrorNote: "The AI won't find a signature block on the pages",
       templateLabel: "Certification template",
       templateGroup: "Template",
       sign: "Sign",
       certify: "Certify",
       pickTemplate: "Choose a template to certify the document.",
-      batch: "Batch",
-      oneFile: "1 file",
       errorDetail:
-        "Dify returned no signature blocks. The resolver never guesses a stamp — the worker marks the file as an error and the original stays in storage.",
-      codeLink: "code",
+        "Dify found no signature block on the pages. The resolver never guesses a stamp — the service says what's missing on the document, and the original stays in storage.",
       liveDone: "Document ready",
-      liveError: "Error: signature template not found",
-      errorTitle: "Signature template not found.",
-      errorNote: "This is how users see the message in the file list.",
+      liveError: "The document lacks a signature block",
+      errorTitle:
+        "The document has no signature block — nowhere to put the signature and seal.",
       download: "Download PDF",
-      retry: "Retry without the error",
-      stop: "Stop",
-      restart: "New batch",
+      retry: "Retry with a signature block",
+      restart: "Start over",
       viewer: "Document preview",
       prevPage: "Previous page",
       nextPage: "Next page",
@@ -399,12 +376,9 @@ export const caseEn: CaseText = {
       before: "Before",
       after: "After",
       emptyViewer: "The document will appear here",
-      dialogTitle: "What should happen to the documents?",
-      dialogNote: "You can change the action before starting.",
       signingOption:
         "Facsimile signature with a seal. Place and signatory come from the document.",
-      certOption: "A “true copy” stamp on every page from the chosen template.",
-      cancel: "Cancel"
+      certOption: "A “true copy” stamp on every page from the chosen template."
     },
     paper: {
       label: (page: number, stamped: boolean) =>

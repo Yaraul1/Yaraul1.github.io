@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { useMemo } from "react";
 import type { GroupProps } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
-import { codeSamples } from "~/components/legalhub/content";
+import { resolverCode, stampCode } from "./editorCode";
 import { canvasTexture, useDisposable } from "./WorkspaceDetails";
 
 /*
@@ -122,12 +122,10 @@ function drawEditor(g: CanvasRenderingContext2D) {
   const lineH = 40;
   const top = 172;
   const fits = Math.floor((TEX_H - 48 - top) / lineH) + 1;
-  const code = [
-    ...codeSamples[2].code.split("\n"),
-    "",
-    "",
-    ...codeSamples[3].code.split("\n")
-  ].slice(0, fits);
+  const code = [...resolverCode.split("\n"), "", "", ...stampCode.split("\n")].slice(
+    0,
+    fits
+  );
   g.font = `400 25px ${MONO}`;
   const charW = g.measureText("M").width;
   code.forEach((line, i) => {
@@ -234,7 +232,7 @@ function drawLegalHub(g: CanvasRenderingContext2D) {
   g.fillStyle = "#8f8475";
   g.font = `400 22px ${SANS}`;
   g.textAlign = "center";
-  g.fillText("legalhub · Готовые документы", TEX_W / 2, 43);
+  g.fillText("Подписание · Готовые документы", TEX_W / 2, 43);
   g.textAlign = "left";
   // app header
   g.fillStyle = "#fbf8f2";
@@ -253,7 +251,7 @@ function drawLegalHub(g: CanvasRenderingContext2D) {
   g.stroke();
   g.fillStyle = "#2a251f";
   g.font = `650 30px ${SANS}`;
-  g.fillText("LegalHub", 94, 124);
+  g.fillText("Подписание документов", 94, 124);
   g.fillStyle = "#62594d";
   g.font = `400 23px ${SANS}`;
   g.textAlign = "right";

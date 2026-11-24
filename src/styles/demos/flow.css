@@ -1,0 +1,897 @@
+/* Tenders & Mail → Request Filter: a simplified scheme drawn with the site's own tokens. */
+
+.fd {
+  --fd-gap: 14px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: var(--font-ui);
+  color: var(--c-text);
+  background: var(--c-raised);
+}
+
+/* ── top: badge, steps, restart ── */
+.fd-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--c-line);
+  background: var(--c-sunken);
+}
+.fd-badge {
+  font-size: 12px;
+  color: var(--c-text-3);
+  white-space: nowrap;
+}
+.fd-steps {
+  display: flex;
+  gap: 6px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.fd-steps li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--c-text-3);
+}
+.fd-steps li.is-now {
+  background: var(--c-accent-soft);
+  color: var(--c-accent);
+  font-weight: 600;
+}
+.fd-steps li.is-done {
+  color: var(--c-text-2);
+}
+.fd-step-n {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  background: var(--c-raised);
+  border: 1px solid var(--c-line);
+}
+.fd-steps li.is-now .fd-step-n {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-accent-text);
+}
+.fd-steps li.is-done .fd-step-n {
+  background: var(--c-success-soft);
+  border-color: transparent;
+  color: var(--c-success);
+}
+
+.fd-hint {
+  margin: 0;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--c-text-2);
+  border-bottom: 1px solid var(--c-line);
+}
+
+/* ── body ── */
+.fd-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+}
+/* a step fills the frame: no empty band under it */
+.fd-body > * {
+  flex: 1 0 auto;
+}
+.fd-split {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: var(--fd-gap);
+  align-items: start;
+}
+.fd-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  background: var(--c-bg);
+  box-shadow: var(--shadow-card);
+  animation: fd-in 0.25s ease both;
+}
+.fd-split .fd-panel {
+  width: 100%;
+}
+.fd-panel.is-muted {
+  background: var(--c-sunken);
+}
+.fd-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--c-line);
+}
+.fd-count {
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--c-text-2);
+  background: var(--c-sunken);
+}
+.fd-panel-foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  border-top: 1px solid var(--c-line);
+}
+
+/* ── rows: tenders and e-mails ── */
+.fd-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--c-line);
+  animation: fd-in 0.3s ease both;
+}
+.fd-row:last-child {
+  border-bottom: 0;
+}
+.fd-row.is-hidden {
+  opacity: 0.62;
+}
+.fd-kind {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  font-size: 17px;
+}
+.fd-kind.is-tender {
+  color: var(--c-accent);
+  background: var(--c-accent-soft);
+}
+.fd-kind.is-mail {
+  color: var(--c-ink);
+  background: var(--c-ink-soft);
+}
+.fd-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.fd-row-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.fd-row-meta {
+  font-size: 12.5px;
+  color: var(--c-text-3);
+}
+.fd-row-note {
+  font-size: 12.5px;
+  color: var(--c-text-2);
+}
+.fd-row-ai {
+  color: var(--c-text-3);
+}
+.fd-prio {
+  flex: none;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.fd-prio.is-high {
+  color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+.fd-prio.is-mid {
+  color: var(--c-ink);
+  background: var(--c-ink-soft);
+}
+
+/* ── buttons ── */
+.fd-btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 9px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-text);
+  background: var(--c-raised);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.fd-btn:hover {
+  background: var(--c-hover);
+}
+.fd-btn:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+}
+.fd-btn.is-primary {
+  color: var(--c-accent-text);
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+}
+.fd-btn.is-primary:hover {
+  background: var(--c-accent-hover);
+}
+.fd-btn.is-ghost {
+  background: transparent;
+}
+.fd-btn.is-take {
+  color: var(--c-success);
+  border-color: var(--c-success);
+  background: var(--c-success-soft);
+}
+.fd-btn.is-reject {
+  color: var(--c-danger);
+  border-color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+
+/* ── the Filter's card ── */
+.fd-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--c-line);
+}
+.fd-card-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.fd-card-head p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--c-text-3);
+}
+.fd-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 230px;
+  gap: 20px;
+  padding: 14px 16px 18px;
+}
+.fd-sub {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+.fd-sub + * + .fd-sub {
+  margin-top: 18px;
+}
+.fd-positions,
+.fd-rules {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-positions li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 7px 0;
+  font-size: 14px;
+  border-bottom: 1px dashed var(--c-line);
+}
+.fd-qty {
+  color: var(--c-text-2);
+  font-variant-numeric: tabular-nums;
+}
+.fd-cat {
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--c-text-2);
+  background: var(--c-sunken);
+}
+.fd-cat.is-yes {
+  color: var(--c-success);
+  background: var(--c-success-soft);
+}
+.fd-rules li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--c-text-3);
+  transition: color 0.25s;
+}
+.fd-rules li.is-on {
+  color: var(--c-text);
+}
+.fd-rules li > span:first-child {
+  flex: none;
+  font-size: 17px;
+}
+.fd-rules li.is-on > span:first-child {
+  color: var(--c-success);
+}
+.fd-rules li > span:nth-child(2) {
+  flex: 1;
+}
+.fd-rules b {
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-3);
+}
+.fd-rules li.is-on b {
+  color: var(--c-success);
+}
+
+.fd-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.fd-ring {
+  --p: 0;
+  display: grid;
+  place-content: center;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--c-bg) 78%, transparent 79%),
+    conic-gradient(var(--c-success) calc(var(--p) * 1%), var(--c-sunken) 0);
+  transition: background 0.4s;
+}
+.fd-ring strong {
+  font-size: 34px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.fd-ring small {
+  font-size: 12px;
+  color: var(--c-text-3);
+}
+.fd-score-label {
+  font-size: 12px;
+  color: var(--c-text-3);
+}
+.fd-verdict {
+  animation: fd-in 0.3s ease both;
+}
+.fd-verdict strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  color: var(--c-success);
+}
+.fd-verdict p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-text-2);
+}
+.fd-muted {
+  color: var(--c-text-3) !important;
+}
+.fd-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* ── decision and log ── */
+.fd-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 16px 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.fd-banner span {
+  font-size: 18px;
+}
+.fd-banner.is-take {
+  color: var(--c-success);
+  background: var(--c-success-soft);
+}
+.fd-banner.is-reject {
+  color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+.fd-banner + .fd-panel-head {
+  border-bottom: 0;
+}
+.fd-journal {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-journal li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid var(--c-line);
+  animation: fd-in 0.3s ease both;
+}
+.fd-journal-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.fd-journal-cell small {
+  font-size: 11px;
+  color: var(--c-text-3);
+}
+.fd-tag {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.fd-tag.is-take {
+  color: var(--c-success);
+  background: var(--c-success-soft);
+}
+.fd-tag.is-check {
+  color: var(--c-ink);
+  background: var(--c-ink-soft);
+}
+.fd-tag.is-reject {
+  color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+
+@keyframes fd-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fd-panel,
+  .fd-row,
+  .fd-verdict,
+  .fd-journal li {
+    animation: none;
+  }
+}
+
+/* ── the Filter: panels share the frame's height ── */
+.fl .fd-split {
+  align-items: stretch;
+}
+/* the rows share the panel's height */
+.fl .fd-list,
+.fl .fd-journal {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.fl .fd-list > .fd-row,
+.fl .fd-journal > li {
+  flex: 1;
+}
+.fl .fd-card-grid {
+  flex: 1;
+}
+/* incoming: eight items in two columns of four */
+.fl-inbox .fd-list {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: column;
+}
+.fl-inbox .fd-row:nth-child(-n + 4) {
+  border-right: 1px solid var(--c-line);
+}
+.fl-inbox .fd-row:nth-child(4n) {
+  border-bottom: 0;
+}
+.fl-journal-foot {
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.fl-journal-foot p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--c-text-3);
+}
+
+/* ── shared by every demo: one look for the same things ── */
+.fd-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.fd-spin {
+  animation: fd-spin 0.9s linear infinite;
+}
+@keyframes fd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fd-spin {
+    animation: none;
+  }
+}
+
+/* a document on the left, the controls on the right (Translator, Document Signing) */
+.fd-work {
+  display: grid;
+  flex: 1 1 0;
+  grid-template-columns: minmax(0, 1.15fr) minmax(290px, 0.85fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 14px;
+  min-height: 0;
+}
+.fd-viewer {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  background: var(--c-sunken);
+}
+.fd-viewer-bar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 10px 6px 14px;
+  border-bottom: 1px solid var(--c-line);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-text-2);
+  background: var(--c-bg);
+}
+.fd-viewer-bar > :last-child:not(:first-child) {
+  margin-left: auto;
+}
+/* the page is as large as the stage allows in both directions */
+.fd-viewer-stage {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 0;
+  padding: 14px;
+  container-type: size;
+}
+.fd-viewer-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--c-text-3);
+}
+.fd-viewer-empty > span:first-child {
+  font-size: 40px;
+  opacity: 0.6;
+}
+.fd-side {
+  min-height: 0;
+  overflow: auto;
+}
+.fd-side-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px 16px;
+}
+.fd-side-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--c-line);
+}
+.fd-side-foot small {
+  font-size: 12.5px;
+  color: var(--c-text-3);
+}
+
+/* a file: icon, name and size, status */
+.fd-file {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.fd-file-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  font-size: 20px;
+  color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+.fd-file-icon.is-doc {
+  color: var(--c-accent);
+  background: var(--c-accent-soft);
+}
+.fd-file-name {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.fd-file-name small {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--c-text-3);
+}
+
+/* a status: a word and a colour */
+.fd-status {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--c-text-2);
+  background: var(--c-sunken);
+}
+.fd-status.is-busy {
+  color: var(--c-accent);
+  background: var(--c-accent-soft);
+}
+.fd-status.is-done {
+  color: var(--c-success);
+  background: var(--c-success-soft);
+}
+.fd-status.is-error {
+  color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+
+/* a two- or three-way switch */
+.fd-seg {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--c-sunken);
+}
+.fd-seg button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--c-text-2);
+  background: transparent;
+  cursor: pointer;
+}
+.fd-seg button.is-on {
+  font-weight: 600;
+  color: var(--c-text);
+  background: var(--c-raised);
+  box-shadow: var(--shadow-card);
+}
+.fd-seg button:disabled {
+  cursor: default;
+}
+
+/* a choice among a few */
+.fd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--c-text-2);
+}
+.fd-chips > span:first-child {
+  margin-right: 4px;
+}
+.fd-chip {
+  padding: 4px 11px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--c-text);
+  background: var(--c-raised);
+  cursor: pointer;
+}
+.fd-chip.is-on {
+  color: var(--c-accent-text);
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+}
+.fd-chip:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.fd-seg button:focus-visible,
+.fd-chip:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 1px;
+}
+
+/* the stages a job goes through */
+.fd-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fd-stage {
+  display: flex;
+  gap: 10px;
+}
+.fd-stage-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-3);
+  background: var(--c-sunken);
+}
+.fd-stage.is-done .fd-stage-mark {
+  color: var(--c-success);
+  background: var(--c-success-soft);
+}
+.fd-stage.is-now .fd-stage-mark {
+  color: var(--c-accent-text);
+  background: var(--c-accent);
+}
+.fd-stage.is-error .fd-stage-mark {
+  color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+.fd-stage-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 3px;
+}
+.fd-stage-body strong {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.fd-stage.is-wait .fd-stage-body strong {
+  font-weight: 500;
+  color: var(--c-text-3);
+}
+.fd-stage-note {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--c-text-3);
+}
+.fd-stage.is-error .fd-stage-note {
+  color: var(--c-danger);
+}
+
+/* ── narrow demo frame ── */
+@container demo (max-width: 760px) {
+  .fd-top {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .fd-steps {
+    order: 3;
+    width: 100%;
+    margin: 0;
+    overflow-x: auto;
+  }
+  .fd-step-t {
+    white-space: nowrap;
+  }
+  .fd-btn.is-ghost {
+    margin-left: auto;
+  }
+  .fd-split,
+  .fd-card-grid {
+    grid-template-columns: 1fr;
+  }
+  .fd-row {
+    flex-wrap: wrap;
+  }
+  .fd-row .fd-btn {
+    margin-left: 44px;
+  }
+  .fd-journal li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .fd-body {
+    padding: 12px;
+  }
+  .fl-inbox .fd-list {
+    grid-template-rows: none;
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+  }
+  .fl-inbox .fd-row:nth-child(-n + 4) {
+    border-right: 0;
+  }
+  .fl-inbox .fd-row:nth-child(4) {
+    border-bottom: 1px solid var(--c-line);
+  }
+  .fl-journal-foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  /* the document above its controls; the page takes the frame's width */
+  .fd-work {
+    flex: none;
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+  .fd-viewer-stage {
+    container-type: inline-size;
+  }
+}

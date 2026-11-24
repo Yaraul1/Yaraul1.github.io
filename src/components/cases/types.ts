@@ -17,27 +17,20 @@ export interface CaseText {
   kicker: string;
   lead: string;
   facts: { term: string; value: string; icon: string }[];
-  problem: { before: string[]; after: string[] };
-  steps: { title: string; text: string; icon: string }[];
+  /** "before → after"; a case without a problem to solve leaves it out */
+  problem?: { before: string[]; after: string[] };
+  /** the user's path; left out when there is nothing to walk through */
+  steps?: { title: string; text: string; icon: string }[];
   stages: CaseStage[];
   architecture: { request: ArchNode[]; data: ArchNode[]; processing: ArchNode[] };
   decisions: { title: string; summary: string; text: string; icon: string }[];
   numbers: { area: string; value: string; detail: string }[];
-  /** labels and explanations for the code samples, in the same order */
-  code: { label: string; explanation: string }[];
-}
-
-export interface CaseCode {
-  path: string;
-  language: string;
-  code: string;
 }
 
 export interface ProjectCaseData {
   id: string;
   art: ArtKind;
   stack: string[];
-  code: CaseCode[];
   /** architecture block selected first */
   firstNode: string;
   /** shows the shared chapter about how two projects work together (see bridge.ts) */

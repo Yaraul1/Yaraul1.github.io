@@ -57,105 +57,77 @@
   margin-bottom: 3.4cqmin;
 }
 
-/* spider: a radar that finds tenders, the mailbox, and the hand-off to the Filter */
-.art-spider .art-radar {
-  position: absolute;
-  left: 50%;
+/* spider: a letter with a digest becomes separate tenders, each with its status */
+.art-spider .art-letter {
+  left: 9%;
   top: 50%;
-  width: 78cqmin;
+  width: 40cqmin;
+  height: 54cqmin;
+  padding: 16cqmin 5.5cqmin 5cqmin;
+  translate: 0 -50%;
+  rotate: -5deg;
+}
+.art-spider .art-letter > i:nth-of-type(2) {
+  width: 82%;
+}
+.art-spider .art-letter > i:nth-of-type(3) {
+  width: 70%;
+}
+.art-spider .art-letter > i:nth-of-type(4) {
+  width: 56%;
+}
+.art-spider .art-envelope {
+  position: absolute;
+  left: 5.5cqmin;
+  top: 4.4cqmin;
+  width: 8.4cqmin;
   aspect-ratio: 1;
-  translate: -50% -50%;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--c-accent) 14%, transparent),
-    transparent 70%
-  );
-}
-.art-spider .art-radar > i {
-  position: absolute;
-  border-radius: 50%;
-  border: 0.35cqmin solid color-mix(in srgb, var(--c-accent) 30%, transparent);
-}
-.art-spider .art-radar > i:nth-child(1) {
-  inset: 0;
-}
-.art-spider .art-radar > i:nth-child(2) {
-  inset: 17%;
-}
-.art-spider .art-radar > i:nth-child(3) {
-  inset: 34%;
-}
-.art-spider .art-radar:before,
-.art-spider .art-radar:after {
-  content: "";
-  position: absolute;
-  background: color-mix(in srgb, var(--c-accent) 20%, transparent);
-}
-.art-spider .art-radar:before {
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 0.3cqmin;
-}
-.art-spider .art-radar:after {
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 0.3cqmin;
-}
-.art-spider .art-sweep {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    color-mix(in srgb, var(--c-accent) 38%, transparent),
-    transparent 22%
-  );
-  animation: art-spin 6s linear infinite;
-}
-.art-spider .art-pin {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: 3.4cqmin;
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  border-radius: 50%;
-  background: var(--c-accent);
-  box-shadow: 0 0 0 1.2cqmin color-mix(in srgb, var(--c-accent) 22%, transparent);
-  animation: art-ping 2.8s ease-out var(--d) infinite;
-}
-.art-spider .art-mail,
-.art-spider .art-tag {
-  position: absolute;
   display: grid;
   place-items: center;
-  border-radius: 4cqmin;
-  background: color-mix(in srgb, var(--c-raised) 82%, transparent);
-  border: 0.3cqmin solid var(--glass-line);
-  box-shadow: 0 2cqmin 5cqmin #3b2d1a2e;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-radius: 1.8cqmin;
+  font-size: 5cqmin;
+  color: #fff;
+  background: var(--c-accent);
 }
-.art-spider .art-mail {
+.art-spider .art-tenders {
+  position: absolute;
   right: 9%;
-  bottom: 11%;
-  width: 17cqmin;
-  aspect-ratio: 1;
-  font-size: 8cqmin;
-  color: var(--c-accent);
-  rotate: -6deg;
+  top: 50%;
+  width: 40cqmin;
+  display: grid;
+  gap: 3.4cqmin;
+  translate: 0 -50%;
+  rotate: 4deg;
 }
-.art-spider .art-tag {
-  left: 9%;
-  top: 11%;
-  width: 13cqmin;
+.art-spider .art-tender {
+  position: relative;
+  height: 14cqmin;
+  padding: 3.6cqmin 4cqmin 0 10cqmin;
+}
+.art-spider .art-tender > i {
+  height: 2cqmin;
+  margin-bottom: 2.4cqmin;
+}
+.art-spider .art-tender > i:nth-of-type(2) {
+  width: 58%;
+}
+.art-spider .art-tender > b {
+  position: absolute;
+  left: 4cqmin;
+  top: 50%;
+  width: 3.4cqmin;
   aspect-ratio: 1;
-  font-size: 6cqmin;
-  color: var(--c-success);
-  rotate: 5deg;
+  translate: 0 -50%;
+  border-radius: 50%;
+}
+.art-spider .is-new > b {
+  background: var(--c-accent);
+}
+.art-spider .is-work > b {
+  background: #d39a2e;
+}
+.art-spider .is-done > b {
+  background: var(--c-success);
 }
 
 /* filter: a request with every position judged, and its score */
@@ -268,7 +240,8 @@
   color: #fff;
   background: var(--c-accent);
 }
-.art-translator .art-arrow {
+.art-translator .art-arrow,
+.art-spider .art-arrow {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -300,7 +273,10 @@
 .art-transcriber .art-wave > i {
   flex: 1;
   border-radius: 2cqmin;
-  background: linear-gradient(var(--c-accent), color-mix(in srgb, var(--c-accent) 55%, #8b5cf6));
+  background: linear-gradient(
+    var(--c-accent),
+    color-mix(in srgb, var(--c-accent) 55%, #8b5cf6)
+  );
   opacity: 0.85;
   animation: art-wave 1.6s ease-in-out infinite alternate;
 }
@@ -339,7 +315,7 @@
   box-shadow: 0 1.6cqmin 4cqmin #3b2d1a33;
 }
 
-/* bonadi: knitted texture and the brand's wordmark */
+/* bonadi: knitted texture and the brand's name, set in type */
 .art-bonadi {
   --knit-a: #ead9c6;
   --knit-b: #d8bca2;
@@ -377,34 +353,15 @@
   -webkit-backdrop-filter: blur(10px);
   color: #3a2f27;
 }
-.art-bonadi .art-brand img {
-  display: block;
-  width: 46cqmin;
-  height: auto;
-}
 .art-bonadi .art-brand strong {
-  font: 300 9cqmin/1 var(--font-ui);
+  font: 300 13cqmin/1 var(--font-ui);
   letter-spacing: 0.32em;
   margin-right: -0.32em;
-}
-.art-bonadi .art-brand small {
-  font: 400 3.2cqmin/1 var(--font-ui);
-  letter-spacing: 0.08em;
-  color: #6b5a4c;
 }
 
 @keyframes art-spin {
   to {
     rotate: 360deg;
-  }
-}
-@keyframes art-ping {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-accent) 40%, transparent);
-  }
-  60% {
-    box-shadow: 0 0 0 2.6cqmin transparent;
   }
 }
 @keyframes art-wave {
@@ -565,10 +522,18 @@
   border-radius: 2px;
 }
 .is-spider .bridge-line {
-  background: linear-gradient(90deg, var(--spider), color-mix(in srgb, var(--filter) 70%, transparent));
+  background: linear-gradient(
+    90deg,
+    var(--spider),
+    color-mix(in srgb, var(--filter) 70%, transparent)
+  );
 }
 .is-filter .bridge-line {
-  background: linear-gradient(90deg, color-mix(in srgb, var(--spider) 70%, transparent), var(--filter));
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--spider) 70%, transparent),
+    var(--filter)
+  );
 }
 .bridge-wire.is-to-filter .bridge-line:after,
 .bridge-wire.is-both .bridge-line:after,
@@ -678,57 +643,57 @@
   translate: -50% 0;
 }
 
-/* ── project icons (ProjectLogo) ── app-icon tiles; --logo sets the size */
+/* ── project marks (ProjectLogo): one tile for every project, its colour and a white glyph;
+   --logo sets the size ── */
 .plogo {
   --logo: 52px;
   flex: none;
   width: var(--logo);
   height: var(--logo);
-  border-radius: 23%;
-  filter: drop-shadow(0 4px 10px #00000038) drop-shadow(0 0 0.5px #00000040);
-}
-span.plogo {
   display: grid;
   place-items: center;
-  overflow: hidden;
-}
-img.plogo {
-  object-fit: contain;
+  border-radius: 23%;
+  font-size: calc(var(--logo) * 0.54);
+  color: #fff;
+  background: linear-gradient(150deg, var(--tile-a), var(--tile-b));
+  box-shadow:
+    inset 0 1px 0 #ffffff47,
+    inset 0 -1px 0 #0000001f,
+    0 4px 10px -2px #3b2d1a40,
+    0 0 0 0.5px #00000026;
 }
 .plogo-spider {
-  background: #fff;
+  --tile-a: #7482f0;
+  --tile-b: #4550c6;
 }
-.plogo-spider > i {
-  width: 82%;
-  height: 82%;
-  background: #1b1a18;
-  -webkit-mask: url(/projects/spider.svg) center / contain no-repeat;
-  mask: url(/projects/spider.svg) center / contain no-repeat;
+.plogo-filter {
+  --tile-a: #45b48d;
+  --tile-b: #1f7a5c;
+}
+.plogo-translator {
+  --tile-a: #f17d5f;
+  --tile-b: #c84a32;
+}
+.plogo-legalhub {
+  --tile-a: #5f6676;
+  --tile-b: #2e333d;
 }
 .plogo-transcriber {
-  color: #fff;
-  font-size: calc(var(--logo) * 0.5);
-  background: linear-gradient(145deg, #4388f7, #2c60cf);
+  --tile-a: #9d7ff0;
+  --tile-b: #6346c6;
 }
-/* the brand's wordmark: a wider white plate */
-.plogo-bonadi.is-wide {
-  width: calc(var(--logo) * 2.3);
-  padding: 0 calc(var(--logo) * 0.16);
-  border-radius: calc(var(--logo) * 0.24);
-  background: #fff;
-}
-.plogo-bonadi img {
-  width: 100%;
-  height: 78%;
-  object-fit: contain;
+.plogo-bonadi {
+  --tile-a: #dba387;
+  --tile-b: #b06c4d;
 }
 
 /* on a card: straddles the edge between the picture and the text */
 .project-logo {
+  --logo: 44px;
   align-self: flex-start;
   position: relative;
   z-index: 1;
-  margin: -44px 0 12px;
+  margin: -36px 0 10px;
 }
 /* in a case hero: next to the kicker */
 .case-brand {
@@ -740,15 +705,15 @@ img.plogo {
   --logo: 46px;
 }
 
-/* ── interactive demos (components/cases/demos) ──
-   A window frame; the demo inside fills it (height: 100%). In a wide case the frame is as
-   tall as the visible window (minus the toolbar row and 24px of air), so the whole app is
-   in view; when the frame is narrower than 760px its height becomes auto and the demo
+/* ── interactive demos (components/cases/demos, legalhub/Demo) ──
+   One window frame for every demo, so they all have the same size: as tall as the visible
+   window (minus the toolbar row and 24px of air) but between 520 and 640px; the demo inside
+   fills it. When the frame is narrower than 760px its height becomes auto and the demo
    stacks into one column. Demos query their own width with @container demo (…). */
 .case-demo {
   container: demo / inline-size;
   position: relative;
-  height: clamp(480px, calc(100cqh - var(--lh-bar) - 48px), 860px);
+  height: clamp(520px, calc(100cqh - var(--lh-bar) - 48px), 640px);
   border: 1px solid var(--c-line);
   border-radius: 18px;
   overflow: hidden;

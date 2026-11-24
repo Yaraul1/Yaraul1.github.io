@@ -23,7 +23,7 @@ const themeOptions: {
   { mode: "system", label: "auto", icon: "i-ph-circle-half-bold" }
 ];
 
-const navApps = ["profile", "projects", "contact"];
+const navApps = ["profile", "projects", "assistant", "contact"];
 
 function formatMenuDate(date: Date, lang: Lang) {
   const loc = locale(lang);
@@ -67,7 +67,7 @@ export default function Desktop({ preview = false }: { preview?: boolean }) {
   const [popover, setPopover] = useState<Popover>(null);
   const { mode } = useTheme();
   const { theme, toggle: toggleTheme, choose: chooseTheme } = useThemeToggle();
-  // lift our Dock and footer above the system Dock when the window slides under it
+  // keep our Dock and footer above the system Dock when the window slides under it
   useOsDockInsetVar();
 
   const focus = useCallback(

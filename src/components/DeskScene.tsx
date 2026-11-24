@@ -309,7 +309,7 @@ function Lighting({ theme }: { theme: Theme }) {
     <>
       <Environment
         key={theme}
-        resolution={256}
+        resolution={1024}
         frames={1}
         environmentIntensity={mood.envIntensity}
       >
@@ -544,13 +544,13 @@ function computeFraming(
 ): Framing {
   const aspect = width / height;
   const k = THREE.MathUtils.smoothstep(aspect, 0.6, 1.45);
-  const el = THREE.MathUtils.degToRad(THREE.MathUtils.lerp(40, 25, k));
+  const baseEl = THREE.MathUtils.lerp(40, 25, k);
   const az = THREE.MathUtils.degToRad(THREE.MathUtils.lerp(9, 20, k));
-  const dir = new THREE.Vector3(
-    Math.sin(az) * Math.cos(el),
-    Math.sin(el),
-    Math.cos(az) * Math.cos(el)
-  );
+  const dir = new THREE.Vector3();
+  const aim = (elDeg: number) => {
+    const el = THREE.MathUtils.degToRad(elDeg);
+    dir.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
+  };
   const pivot = new THREE.Vector3(0, 1, 0);
   const top = 1 - 2 * THREE.MathUtils.clamp(topInset + 0.035, 0.1, 0.6);
   const bottom = -1 + 2 * THREE.MathUtils.lerp(0.13, 0.1, k);
@@ -581,19 +581,35 @@ function computeFraming(
     }
     return e;
   };
-  let lo = 4;
-  let hi = 140;
-  for (let i = 0; i < 32; i++) {
-    const mid = (lo + hi) / 2;
-    const m = measure(mid);
-    const fits =
-      (m.hardMaxX - m.hardMinX) / 2 <= hardLimit &&
-      (m.maxX - m.minX) / 2 <= softLimit &&
-      m.maxY - m.minY <= top - bottom;
-    if (fits) hi = mid;
-    else lo = mid;
+  /** The closest distance at which everything fits, for the current viewing direction. */
+  const fitDistance = () => {
+    let lo = 4;
+    let hi = 140;
+    for (let i = 0; i < 32; i++) {
+      const mid = (lo + hi) / 2;
+      const m = measure(mid);
+      const fits =
+        (m.hardMaxX - m.hardMinX) / 2 <= hardLimit &&
+        (m.maxX - m.minX) / 2 <= softLimit &&
+        m.maxY - m.minY <= top - bottom;
+      if (fits) hi = mid;
+      else lo = mid;
+    }
+    return hi;
+  };
+  // In a tall window the width is what limits the shot, and the desk would float in the
+  // middle of a band that is too high for it, far below the headline. Looking down a little
+  // more steeply shows more of the desk top, so the shot fills the band instead.
+  let elDeg = baseEl;
+  aim(elDeg);
+  let distance = fitDistance();
+  for (let step = 0; step < 10; step++) {
+    const m = measure(distance);
+    if (m.maxY - m.minY >= (top - bottom) * 0.94) break;
+    elDeg += 1.5;
+    aim(elDeg);
+    distance = fitDistance();
   }
-  const distance = hi;
   const tanV = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
   const tanH = tanV * aspect;
   const right = new THREE.Vector3();
@@ -813,13 +829,13 @@ export default function DeskScene(props: SceneProps) {
     <Canvas
       shadows
       frameloop="demand"
-      dpr={[1, 1.75]}
+      dpr={[1, 2]}
       camera={{ fov: FOV, near: 0.5, far: 140, position: [9, 9, 20] }}
       gl={{
         antialias: true,
         alpha: true,
         powerPreference: "high-performance",
-        toneMapping: THREE.NeutralToneMapping
+        toneMapping: THREE.NoToneMapping
       }}
       fallback={<div className="desk-webgl-fallback">{props.labels.fallback}</div>}
     >

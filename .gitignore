@@ -6,3 +6,14 @@ dist/
 
 .sites-runtime/
 .sites-checkout/
+
+# personal files: the CV and the photo stay local; the site shows them only where the files are
+public/resume/
+public/profile/
+
+# local tooling, not part of the site
+.agents/
+.openai/
+
+# unused wallpaper (Apple's), kept only locally
+public/wallpapers/mac-purple.jpg

@@ -1,4 +1,4 @@
-"""Build the fictional, clearly marked PDFs for the LegalHub portfolio demo.
+"""Build the fictional, clearly marked PDFs for the document signing portfolio demo.
 
 The pages repeat the contract shown in src/components/legalhub/Paper.tsx:
 source.pdf — the document as uploaded, signing.pdf — signature and round seal
@@ -256,7 +256,7 @@ def certification_stamp(c):
 
 for kind in ("source", "signing", "certification"):
     c = canvas.Canvas(str(OUT / f"{kind}.pdf"), pagesize=A4)
-    c.setTitle(f"LegalHub — {kind} — DEMO-001 (образец)")
+    c.setTitle(f"Подписание документов — {kind} — DEMO-001 (образец)")
     c.setAuthor("Yaroslav Yuferev — portfolio demo")
     c.setSubject("Вымышленный документ для демонстрации интерфейса")
     for page in (1, 2):

@@ -364,8 +364,7 @@ button:disabled {
 }
 .desktop-credit {
   position: absolute;
-  bottom: calc(16px + var(--os-dock-lift, 0px));
-  transition: bottom 0.35s cubic-bezier(0.2, 0.85, 0.25, 1);
+  bottom: calc(16px + var(--os-dock, 0px));
   left: 24px;
   right: 24px;
   display: flex;
@@ -660,7 +659,9 @@ h2 {
   border-radius: 10px;
   color: var(--c-accent-text);
   background: var(--c-accent);
-  box-shadow: 0 1px 2px #0000001f, inset 0 1px 0 #ffffff26;
+  box-shadow:
+    0 1px 2px #0000001f,
+    inset 0 1px 0 #ffffff26;
   transition: background 0.15s;
   text-decoration: none;
 }
@@ -710,7 +711,9 @@ h2 {
   letter-spacing: -0.02em;
   color: var(--c-accent-text);
   background: var(--c-accent);
-  box-shadow: inset 0 1px 0 #ffffff33, 0 2px 6px #00000026;
+  box-shadow:
+    inset 0 1px 0 #ffffff33,
+    0 2px 6px #00000026;
 }
 .sidebar-label {
   font-size: 12px;
@@ -758,13 +761,40 @@ h2 {
   overflow: auto;
   padding: 52px 52px 28px;
 }
+/* the photo sits to the left of the name, as tall as its two lines */
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3cqi, 28px);
+  margin: 14px 0 18px;
+}
+.profile-photo {
+  flex: none;
+  width: clamp(92px, 17cqi, 144px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--c-sunken);
+  box-shadow:
+    0 0 0 1px var(--c-line),
+    var(--shadow-card);
+}
+.profile-photo.is-initials {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 6cqi, 50px);
+  font-weight: 700;
+  color: var(--c-text-2);
+}
 .profile-main h1 {
   font-family: var(--font-display);
   font-size: clamp(40px, 7.5cqi, 68px);
   line-height: 1;
   font-weight: 700;
   letter-spacing: -0.04em;
-  margin: 14px 0 18px;
+  margin: 0;
+  min-width: 0;
   color: var(--c-text);
 }
 .profile-main h1 > span {
@@ -806,6 +836,244 @@ h2 {
 }
 .profile-footer button:hover {
   color: var(--c-accent);
+}
+
+/* About me: the resume under the greeting */
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 10px;
+  margin-top: 40px;
+}
+.about-stat {
+  padding: 14px 16px 15px;
+  border-radius: 14px;
+  background: var(--c-raised);
+  border: 1px solid var(--c-line);
+  box-shadow: var(--shadow-card);
+}
+.about-stat dt {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--c-text);
+}
+.about-stat dd {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--c-text-3);
+}
+.about-section {
+  margin-top: 44px;
+}
+.about-section > h2 {
+  font-size: 25px;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.about-job {
+  padding: 18px 18px 8px;
+  border-radius: 16px;
+  background: var(--c-raised);
+  border: 1px solid var(--c-line);
+  box-shadow: var(--shadow-card);
+}
+.about-job-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2px 16px;
+}
+.about-job-head h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--c-text);
+}
+.about-job-period {
+  font-size: 13.5px;
+  color: var(--c-text-3);
+}
+.about-job-role {
+  margin-top: 3px;
+  font-size: 14.5px;
+  color: var(--c-text-2);
+}
+.about-job-summary {
+  margin: 10px 0 8px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--c-text-2);
+}
+.about-systems {
+  list-style: none;
+}
+.about-systems > li + li {
+  border-top: 1px solid var(--c-line);
+}
+.about-job-summary + .about-systems {
+  border-top: 1px solid var(--c-line);
+}
+.about-system {
+  width: calc(100% + 20px);
+  margin: 0 -10px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 10px;
+  border-radius: 12px;
+  text-align: left;
+  transition: background 0.15s;
+}
+/* hover only where there is a pointer: a tap must not leave a row lit */
+@media (hover: hover) {
+  .about-system:hover {
+    background: var(--c-hover);
+  }
+}
+.about-system:focus-visible {
+  background: var(--c-hover);
+}
+.about-system .about-logo {
+  --logo: 38px;
+  filter: drop-shadow(0 2px 5px #00000030) drop-shadow(0 0 0.5px #00000040);
+}
+.about-system-text {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.about-system-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.about-system-name {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--c-text);
+}
+/* what my part was: built from scratch stands out, a shared or inherited system stays quiet */
+.about-part {
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: var(--c-text-3);
+  background: var(--c-sunken);
+}
+.about-part.is-own {
+  color: var(--c-accent);
+  background: var(--c-accent-soft);
+}
+.about-system-result {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--c-text-2);
+}
+.about-system-go {
+  font-size: 15px;
+  color: var(--c-text-3);
+  transition:
+    color 0.15s,
+    transform 0.2s;
+}
+.about-system:hover .about-system-go,
+.about-system:focus-visible .about-system-go {
+  color: var(--c-accent);
+  transform: translateX(3px);
+}
+.about-skills {
+  display: grid;
+  gap: 12px;
+}
+.about-skill-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+}
+.about-skill-row dt {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--c-text-3);
+}
+.about-skill-row dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.about-chip {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--c-text-2);
+  background: var(--c-raised);
+  border: 1px solid var(--c-line);
+}
+.about-edu {
+  display: grid;
+  gap: 12px;
+}
+.about-edu-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 14px;
+}
+.about-edu dt {
+  padding-top: 2px;
+  font-size: 13px;
+  color: var(--c-text-3);
+}
+.about-edu dd {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--c-text-2);
+}
+.about-edu b {
+  font-weight: 600;
+  color: var(--c-text);
+}
+@container (max-width: 520px) {
+  .about-edu-row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* "Download CV": the quiet secondary action next to the solid "View projects" */
+.resume-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--c-text);
+  background: var(--c-raised);
+  border: 1px solid var(--c-line);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.resume-action span {
+  font-size: 17px;
+  color: var(--c-accent);
+}
+.resume-action:hover {
+  background: var(--c-hover);
+}
+.resume-action:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
 }
 
 /* Projects list */
@@ -864,9 +1132,37 @@ h2 {
   left: 0;
   right: 0;
 }
-/* clear the toolbar row (60px) plus the usual top padding */
+/* the cards start right under the toolbar row (60px) */
 .projects-shell > .projects-app {
-  padding-top: 100px;
+  padding-top: 72px;
+}
+/* the window's title in the middle of the toolbar; drags and double-clicks go to the bar */
+.projects-title {
+  position: absolute;
+  /* level with the other pills: (60px row − 38px pill) / 2 */
+  top: 11px;
+  left: 50%;
+  margin: 0;
+  translate: -50% 0;
+  gap: 8px;
+  padding: 0 6px 0 18px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.projects-count {
+  min-width: 26px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--c-sunken);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-align: center;
+  color: var(--c-text-3);
 }
 .toolbar-btn {
   gap: 7px;
@@ -916,10 +1212,13 @@ h2 {
 }
 .project-list {
   display: grid;
-  /* compact cards: three in a row in a wide window, one on a phone */
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  /* compact cards: three in a row even on a wide screen, one on a phone */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
   gap: 16px;
-  padding: 24px 0;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 4px 0 24px;
 }
 .project-card {
   position: relative;
@@ -943,9 +1242,9 @@ h2 {
 .project-preview {
   position: relative;
   flex: none;
-  height: 150px;
-  background:
-    radial-gradient(circle at 70% 20%, var(--c-ink-soft), transparent 60%), var(--c-sunken);
+  height: 116px;
+  background: radial-gradient(circle at 70% 20%, var(--c-ink-soft), transparent 60%),
+    var(--c-sunken);
   border-bottom: 1px solid var(--c-line);
   overflow: hidden;
 }
@@ -959,7 +1258,9 @@ h2 {
   padding: 9% 8%;
   border-radius: 4px;
   background: #fbf9f4;
-  box-shadow: 0 1px 2px #3b2d1a26, 0 12px 26px #3b2d1a26;
+  box-shadow:
+    0 1px 2px #3b2d1a26,
+    0 12px 26px #3b2d1a26;
   rotate: 2deg;
 }
 .pp-sheet.pp-back {
@@ -1015,7 +1316,7 @@ h2 {
 }
 .project-body {
   flex: 1;
-  padding: 16px 20px 18px;
+  padding: 14px 18px 16px;
   display: flex;
   flex-direction: column;
 }
@@ -1045,13 +1346,13 @@ h2 {
 }
 .project-card h3 {
   font-family: var(--font-display);
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin: 5px 0 6px;
+  margin: 4px 0 5px;
 }
 .project-card p {
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.5;
   color: var(--c-text-2);
   /* the full story is in the case */
@@ -1060,22 +1361,9 @@ h2 {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.project-tags {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin: 12px 0 14px;
-}
-.project-tags span {
-  font-size: 11.5px;
-  color: var(--c-text-2);
-  background: var(--c-sunken);
-  border: 1px solid var(--c-line);
-  padding: 4px 9px;
-  border-radius: 999px;
-}
 .project-links {
   margin-top: auto;
+  padding-top: 14px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1176,6 +1464,12 @@ h2 {
 }
 .section-bottom button {
   color: var(--c-accent);
+}
+/* under the cards, as wide as their grid */
+.projects-app .section-bottom {
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
 }
 
 /* Readme */
@@ -1423,7 +1717,7 @@ h2 {
   .desktop-credit {
     left: 16px;
     right: 16px;
-    bottom: calc(12px + var(--os-dock-lift, 0px));
+    bottom: calc(12px + var(--os-dock, 0px));
     font-size: 10.5px;
   }
   .control-center {
@@ -1443,7 +1737,17 @@ h2 {
 }
 @container win (max-width: 640px) {
   .projects-shell > .projects-app {
-    padding-top: 88px;
+    padding-top: 68px;
+  }
+  /* no room to centre on the window: the title sits between "back" and full screen */
+  .projects-title {
+    position: static;
+    translate: none;
+    margin-inline: auto;
+    font-size: 14.5px;
+  }
+  .projects-title ~ .toolbar-end {
+    margin-left: 0;
   }
   /* a narrow window fits the window buttons, "Desktop" and only the icon for full screen */
   .toolbar-end {
@@ -1472,13 +1776,53 @@ h2 {
     overflow: visible;
   }
   .profile-main h1 {
-    font-size: clamp(38px, 12cqi, 54px);
+    font-size: clamp(34px, 10.5cqi, 54px);
+  }
+  .profile-head {
+    gap: 16px;
+  }
+  .profile-photo {
+    width: clamp(76px, 22cqi, 108px);
   }
   .role-line {
     font-size: 18px;
   }
   .profile-bio {
     font-size: 15.5px;
+  }
+  /* the numbers become one line each instead of two tiles and an orphan */
+  .about-stats {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .about-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 11px 16px;
+  }
+  .about-stat dt {
+    flex: none;
+    font-size: 25px;
+  }
+  .about-stat dd {
+    margin-top: 0;
+  }
+  .about-skill-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .about-system-go {
+    display: none;
+  }
+  .about-system {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+  }
+  .about-system .about-logo {
+    --logo: 32px;
+    margin-top: 2px;
   }
   .projects-app {
     padding: 28px 22px 22px;
@@ -1491,10 +1835,10 @@ h2 {
     font-size: 32px;
   }
   .project-body {
-    padding: 22px;
+    padding: 14px 18px 18px;
   }
   .project-card h3 {
-    font-size: 26px;
+    font-size: 21px;
   }
   .readme-app dl > div {
     flex-direction: column;
@@ -1516,7 +1860,12 @@ h2 {
   }
   .profile-main h1 {
     font-size: clamp(34px, 6cqi, 48px);
+  }
+  .profile-head {
     margin: 6px 0 10px;
+  }
+  .profile-photo {
+    width: clamp(72px, 12cqi, 100px);
   }
   .profile-bio {
     margin: 10px 0 16px;
@@ -1574,46 +1923,6 @@ h2 {
   transform: translateX(-7px);
   transition-delay: 0.25s;
   transition-duration: 0.5s;
-}
-
-/* ───────────── Profile links ───────────── */
-.socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: -6px 0 28px;
-}
-.social {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 21px;
-  color: var(--c-text-2);
-  background: var(--c-raised);
-  border: 1px solid var(--c-line);
-  box-shadow: var(--shadow-card);
-  transition:
-    color 0.2s,
-    background 0.2s,
-    border-color 0.2s,
-    transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4),
-    box-shadow 0.2s;
-}
-a.social:hover,
-a.social:focus-visible {
-  color: #fff;
-  background: var(--brand);
-  border-color: var(--brand);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px -6px var(--brand);
-}
-.social.is-missing {
-  opacity: 0.4;
-  border-style: dashed;
-  box-shadow: none;
-  cursor: help;
 }
 
 /* ───────────── Write to me (mail composer) ───────────── */
@@ -1708,7 +2017,9 @@ a.social:focus-visible {
   font-weight: 600;
   color: var(--c-accent-text);
   background: var(--c-accent);
-  box-shadow: 0 1px 2px #0000001f, inset 0 1px 0 #ffffff26;
+  box-shadow:
+    0 1px 2px #0000001f,
+    inset 0 1px 0 #ffffff26;
   transition: background 0.15s;
 }
 .mail-send > span:first-child {

@@ -21,54 +21,6 @@ const transcriber: ProjectCaseData = {
     "Nginx",
     "Jest · Vitest"
   ],
-  code: [
-    {
-      path: "apps/api/src/worker-main.ts",
-      language: "typescript",
-      code: `const backoffMs = (attempt: number): number =>
-  Math.min(60_000 * 2 ** Math.max(0, attempt - 1), 60 * 60_000);
-// ...
-    if (!candidate) return false;
-    const callbackOnly =
-      candidate.status === TranscriptionStatus.CALLBACK_PENDING ||
-      (candidate.status === TranscriptionStatus.PROCESSING &&
-        Boolean(candidate.callbackUrl && candidate.completedAt));
-    const claimed = await prisma.transcriptionJob.updateMany({
-      where: {
-        id: candidate.id,
-        OR: [/* the same "ready" conditions as when picking the candidate */],
-      },
-      data: {
-        status: TranscriptionStatus.PROCESSING,
-        leaseExpiresAt: new Date(Date.now() + leaseMs),
-        ...(callbackOnly
-          ? {}
-          : { attempts: { increment: 1 }, startedAt: candidate.startedAt || now }),
-      },
-    });
-    if (!claimed.count) return false;
-    const current = await prisma.transcriptionJob.findUnique({ where: { id: candidate.id } });
-    if (current) await runJob(current, callbackOnly);
-    return true;`
-    },
-    {
-      path: "apps/api/src/transcriptions/transcription.engine.ts",
-      language: "typescript",
-      code: `  async transcribe(audio: AudioInput): Promise<TranscriptionResult> {
-    const provider = this.config.get('TRANSCRIPTION_PROVIDER', 'mock').toLowerCase();
-    if (provider === 'mock') {
-      if (this.isProduction()) {
-        throw new ServiceUnavailableException('Провайдер mock запрещён в production');
-      }
-      return { text: \`[DEMO] Тестовая расшифровка файла \${audio.filename}\`, provider: 'mock' };
-    }
-    if (provider === 'dify') return this.dify(audio);
-    if (provider === 'openai') return this.openai(audio);
-    if (provider === 'deepgram') return this.deepgram(audio);
-    throw new ServiceUnavailableException(\`Неизвестный провайдер: \${provider}\`);
-  }`
-    }
-  ],
   ru: {
     title: "Транскрибатор звонков",
     kicker: "Кейс · расшифровка речи",
@@ -82,7 +34,7 @@ const transcriber: ProjectCaseData = {
       {
         icon: "i-ph-waveform",
         term: "На входе",
-        value: "Аудио до 30 МБ: файл или ссылка"
+        value: "Аудио любого размера: файл или ссылка"
       },
       {
         icon: "i-ph-swap",
@@ -112,7 +64,7 @@ const transcriber: ProjectCaseData = {
       {
         icon: "i-ph-upload-simple",
         title: "Новая расшифровка",
-        text: "Файл до 30 МБ или ссылка, язык (ru, en, kk, be) и при желании адрес для ответа."
+        text: "Файл любого размера или ссылка, язык (ru, en, kk, be) и при желании адрес для ответа."
       },
       {
         icon: "i-ph-list-checks",
@@ -145,14 +97,14 @@ const transcriber: ProjectCaseData = {
         title: "Скачивание",
         tool: "fetch",
         detail:
-          "Запись по ссылке скачивается только с разрешённых хостов; каждое перенаправление и размер проверяются по ходу чтения."
+          "Запись по ссылке скачивается только с разрешённых хостов; каждое перенаправление проверяется заново."
       },
       {
         icon: "i-ph-waveform",
         title: "Распознавание",
         tool: "OpenAI · Deepgram · Dify",
         detail:
-          "Один метод transcribe() для всех движков; ключи только на сервере, движок выбирается настройкой."
+          "Запись режется на части по 50 МБ, поэтому размер не ограничен. Один метод transcribe() для всех движков; ключи только на сервере."
       },
       {
         icon: "i-ph-paper-plane-tilt",
@@ -229,7 +181,7 @@ const transcriber: ProjectCaseData = {
         icon: "i-ph-shield-check",
         title: "Защита ссылок",
         summary: "Только разрешённые хосты, каждый редирект заново",
-        text: "Пользователь даёт ссылку на запись и адрес для ответа. Принимаются только HTTP(S) на заданных хостах без логина в адресе; размер проверяется и по заголовку, и при чтении потока."
+        text: "Пользователь даёт ссылку на запись и адрес для ответа. Принимаются только HTTP(S) на заданных хостах и без логина в адресе."
       },
       {
         icon: "i-ph-paper-plane-tilt",
@@ -258,29 +210,13 @@ const transcriber: ProjectCaseData = {
     ],
     numbers: [
       { area: "API", value: "6", detail: "эндпоинтов, плюс health, ready и Swagger" },
-      {
-        area: "Тесты",
-        value: "15",
-        detail: "unit, e2e на Supertest и интеграция с PostgreSQL"
-      },
+      { area: "Языки", value: "4", detail: "ru, en, kk, be" },
       {
         area: "Код",
         value: "≈2,8k",
         detail: "строк TypeScript в API, воркере и кабинете"
       },
       { area: "Запуск", value: "5", detail: "сервисов в Docker Compose" }
-    ],
-    code: [
-      {
-        label: "Захват задачи",
-        explanation:
-          "Воркер забирает задачу одним условным UPDATE: если её уже взял другой, обновится ноль строк. Повтор только доставки не тратит попытку распознавания."
-      },
-      {
-        label: "Сменный движок",
-        explanation:
-          "Все движки за одним методом. Заглушка удобна для демо, но в продакшене выбрасывает ошибку, чтобы её нельзя было оставить по ошибке."
-      }
     ]
   },
   en: {
@@ -296,7 +232,7 @@ const transcriber: ProjectCaseData = {
       {
         icon: "i-ph-waveform",
         term: "Input",
-        value: "Audio up to 30 MB: a file or a link"
+        value: "Audio of any size: a file or a link"
       },
       {
         icon: "i-ph-swap",
@@ -326,7 +262,7 @@ const transcriber: ProjectCaseData = {
       {
         icon: "i-ph-upload-simple",
         title: "New transcription",
-        text: "A file up to 30 MB or a link, the language (ru, en, kk, be) and, optionally, a reply address."
+        text: "A file of any size or a link, the language (ru, en, kk, be) and, optionally, a reply address."
       },
       {
         icon: "i-ph-list-checks",
@@ -359,14 +295,14 @@ const transcriber: ProjectCaseData = {
         title: "Download",
         tool: "fetch",
         detail:
-          "Linked recordings are fetched from allowed hosts only; every redirect and the size are checked while streaming."
+          "Linked recordings are fetched from allowed hosts only; every redirect is checked again."
       },
       {
         icon: "i-ph-waveform",
         title: "Recognition",
         tool: "OpenAI · Deepgram · Dify",
         detail:
-          "One transcribe() method for every engine; keys stay on the server, the engine is a setting."
+          "The recording is cut into 50 MB parts, so there is no size limit. One transcribe() method for every engine; keys stay on the server."
       },
       {
         icon: "i-ph-paper-plane-tilt",
@@ -443,7 +379,7 @@ const transcriber: ProjectCaseData = {
         icon: "i-ph-shield-check",
         title: "Safe links",
         summary: "Allowed hosts only, every redirect re-checked",
-        text: "Users pass a recording link and a reply address. Only HTTP(S) to listed hosts without credentials in the URL is accepted; size is checked both in the header and while streaming."
+        text: "Users pass a recording link and a reply address. Only HTTP(S) to listed hosts, without credentials in the URL, is accepted."
       },
       {
         icon: "i-ph-paper-plane-tilt",
@@ -472,29 +408,13 @@ const transcriber: ProjectCaseData = {
     ],
     numbers: [
       { area: "API", value: "6", detail: "endpoints, plus health, ready and Swagger" },
-      {
-        area: "Tests",
-        value: "15",
-        detail: "unit, e2e with Supertest and PostgreSQL integration"
-      },
+      { area: "Languages", value: "4", detail: "ru, en, kk, be" },
       {
         area: "Code",
         value: "≈2.8k",
         detail: "lines of TypeScript across API, worker and dashboard"
       },
       { area: "Runtime", value: "5", detail: "services in Docker Compose" }
-    ],
-    code: [
-      {
-        label: "Claiming a job",
-        explanation:
-          "A worker claims a job with one conditional UPDATE: if another got it first, zero rows change. Retrying only the delivery doesn't use up a recognition attempt."
-      },
-      {
-        label: "Switchable engine",
-        explanation:
-          "Every engine sits behind one method. The stub is handy for demos but throws in production, so it can't be left on by mistake."
-      }
     ]
   }
 };

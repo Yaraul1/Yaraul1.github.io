@@ -8,6 +8,7 @@ import "uno.css";
 import "~/styles/theme.css";
 import "~/styles/index.css";
 import "~/styles/portfolio.css";
+import "~/styles/assistant.css";
 
 const screenPreview = new URLSearchParams(window.location.search).get("desktop") === "1";
 

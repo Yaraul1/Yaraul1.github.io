@@ -35,6 +35,7 @@ const ru = {
     profile: "Обо мне",
     projects: "Проекты",
     terminal: "Терминал",
+    assistant: "Ассистент",
     contact: "Почта",
     readme: "Об этой ОС"
   } as Record<string, string>,
@@ -79,15 +80,17 @@ const ru = {
   profile: {
     sidebar: "Портфолио",
     openProjects: "Открыть проекты",
-    contact: "Написать письмо",
+    downloadResume: "Скачать резюме",
+    resumeFile: "Юферев_Ярослав_CV.pdf",
     footer: "Рад знакомству",
     tryTerminal: "Попробуй терминал",
-    socials: "Я в соцсетях",
-    socialMissing: (name: string) =>
-      `${name}: ссылка не заполнена — src/configs/portfolio.ts (видно только при разработке)`
+    stats: "Коротко в цифрах",
+    workTitle: "Опыт",
+    sideTitle: "Проекты вне работы",
+    skillsTitle: "Навыки",
+    eduTitle: "Образование и курсы"
   },
   projects: {
-    eyebrow: "Мои работы",
     title: "Проекты",
     count: (n: number): string => (n === 1 ? "проект" : n < 5 ? "проекта" : "проектов"),
     stamp: "КОПИЯ ВЕРНА",
@@ -162,6 +165,31 @@ const ru = {
     ] as [string, string][],
     credit: "Основа интерфейса —"
   },
+  assistant: {
+    name: "Ассистент Ярослава",
+    status: "ИИ · отвечает по опыту и проектам Ярослава",
+    statusOffline: "ИИ · скоро заработает",
+    writeDirect: "Написать лично",
+    newChat: "Новый чат",
+    greeting:
+      "Привет! Я ИИ-ассистент Ярослава. Расскажите о задаче или спросите, что он умеет, — подскажу, возьмётся ли он и стоит ли писать ему лично.",
+    suggestionsLabel: "Можно начать с вопроса",
+    suggestions: [
+      "Что Ярослав умеет делать?",
+      "Сможет сделать ИИ-бота для нашей поддержки?",
+      "С какими системами он интегрировался?",
+      "Как начать с ним работу?"
+    ],
+    placeholder: "Спросите о Ярославе…",
+    send: "Отправить",
+    log: "Переписка с ассистентом",
+    typing: "Ассистент печатает…",
+    disclaimer: "ИИ может ошибаться — важное уточните у Ярослава лично.",
+    offline:
+      "Я пока учусь: Ярослав собирает для меня базу знаний о своих проектах, и скоро я смогу отвечать сам. А пока лучше спросить его напрямую.",
+    failed: "Не получилось ответить. Попробуйте ещё раз или напишите Ярославу напрямую.",
+    mail: "Написать письмо"
+  },
   terminal: {
     welcome: "Введи help, чтобы начать.",
     command: "Команда терминала",
@@ -169,7 +197,7 @@ const ru = {
       "about      — обо мне",
       "projects   — открыть проекты",
       "contact    — контакты",
-      "open       — open profile | projects | contact | readme",
+      "open       — open profile | projects | assistant | contact | readme",
       "whoami     — кто здесь",
       "ls         — файлы рабочего стола",
       "date       — текущее время",
@@ -218,6 +246,7 @@ const en: UIStrings = {
     profile: "About me",
     projects: "Projects",
     terminal: "Terminal",
+    assistant: "Assistant",
     contact: "Mail",
     readme: "About this OS"
   },
@@ -262,15 +291,17 @@ const en: UIStrings = {
   profile: {
     sidebar: "Portfolio",
     openProjects: "View projects",
-    contact: "Write an email",
+    downloadResume: "Download CV",
+    resumeFile: "Yaroslav_Yuferev_CV.pdf",
     footer: "Nice to meet you",
     tryTerminal: "Try the terminal",
-    socials: "Find me online",
-    socialMissing: (name: string) =>
-      `${name}: link not set — src/configs/portfolio.ts (visible in development only)`
+    stats: "In numbers",
+    workTitle: "Experience",
+    sideTitle: "Side projects",
+    skillsTitle: "Skills",
+    eduTitle: "Education and courses"
   },
   projects: {
-    eyebrow: "My work",
     title: "Projects",
     count: (n: number) => (n === 1 ? "project" : "projects"),
     stamp: "КОПИЯ ВЕРНА",
@@ -345,6 +376,31 @@ const en: UIStrings = {
     ],
     credit: "Interface based on"
   },
+  assistant: {
+    name: "Yaroslav's assistant",
+    status: "AI · answers from Yaroslav's experience and projects",
+    statusOffline: "AI · coming online soon",
+    writeDirect: "Write directly",
+    newChat: "New chat",
+    greeting:
+      "Hi! I'm Yaroslav's AI assistant. Tell me about your task or ask what he can do — I'll tell you whether he'd take it on and whether it's worth writing to him directly.",
+    suggestionsLabel: "Start with a question",
+    suggestions: [
+      "What does Yaroslav do?",
+      "Could he build an AI bot for our support team?",
+      "Which systems has he integrated with?",
+      "How do we start working together?"
+    ],
+    placeholder: "Ask about Yaroslav…",
+    send: "Send",
+    log: "Conversation with the assistant",
+    typing: "The assistant is typing…",
+    disclaimer: "AI can make mistakes — check anything important with Yaroslav.",
+    offline:
+      "I'm still learning: Yaroslav is putting together a knowledge base about his projects for me, and soon I'll answer on my own. For now it's best to ask him directly.",
+    failed: "I couldn't answer. Try again or write to Yaroslav directly.",
+    mail: "Write an email"
+  },
   terminal: {
     welcome: "Type help to get started.",
     command: "Terminal command",
@@ -352,7 +408,7 @@ const en: UIStrings = {
       "about      — about me",
       "projects   — open projects",
       "contact    — contact details",
-      "open       — open profile | projects | contact | readme",
+      "open       — open profile | projects | assistant | contact | readme",
       "whoami     — who's here",
       "ls         — desktop files",
       "date       — current time",

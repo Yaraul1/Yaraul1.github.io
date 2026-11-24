@@ -1,4 +1,4 @@
-# LegalHub portfolio demo
+# Document signing portfolio demo
 
 All PDF contents, organization names and stamps here are fictional. These files are presentation assets, not signed legal documents. They were created with `scripts/generate-legalhub-demo.py`.
 

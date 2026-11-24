@@ -2,11 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Chapter, Lane } from "~/components/cases/parts";
 import ProjectLogo from "~/components/cases/ProjectLogo";
 import { useWindowControls } from "~/components/windowContext";
-import CodeBlock from "./CodeBlock";
 import Demo from "./Demo";
 import Paper from "./Paper";
 import {
-  codeSamples,
   observation,
   sectionObserverMargin,
   stack,
@@ -14,6 +12,7 @@ import {
   type Workflow
 } from "./content";
 import "~/styles/legalhub.css";
+import "~/styles/cases.css";
 
 const sections = [
   "overview",
@@ -21,8 +20,7 @@ const sections = [
   "demo",
   "inside",
   "architecture",
-  "decisions",
-  "code"
+  "decisions"
 ] as const;
 
 export default function LegalHubCase({ onBack }: { onBack: () => void }) {
@@ -36,7 +34,6 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
   const [stage, setStage] = useState(0);
   const [node, setNode] = useState("worker");
   const [open, setOpen] = useState<number | null>(null);
-  const [code, setCode] = useState(0);
   const allNodes = [
     ...architecture.request,
     ...architecture.data,
@@ -46,8 +43,6 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
   const stages = c.pipelines[inside];
   const stageIndex = Math.min(stage, stages.length - 1);
   const activeStage = stages[stageIndex];
-  const sample = codeSamples[code];
-  const sampleText = c.code[code];
 
   useEffect(() => {
     const root = scroller.current;
@@ -96,7 +91,7 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
     if (!root || !section) return;
     // The demo is sized to the visible window, so land on the app itself
     // (with the same 24px of air the CSS leaves), not on the chapter heading.
-    const demo = id === "demo" ? section.querySelector<HTMLElement>(".lh-demo") : null;
+    const demo = id === "demo" ? section.querySelector<HTMLElement>(".case-demo") : null;
     const target = demo ?? section;
     // the floating bar covers the top of the window: land just below it
     const bar = root.querySelector<HTMLElement>(".lh-topbar");
@@ -110,11 +105,6 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
       (demo ? 24 : 0);
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     root.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
-  }
-
-  function showCode(index: number) {
-    setCode(index);
-    go("code");
   }
 
   return (
@@ -168,7 +158,7 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
       </nav>
 
       {/* Overview */}
-      <section className="lh-hero-band" id="lh-overview" aria-label="LegalHub">
+      <section className="lh-hero-band" id="lh-overview" aria-label={c.ui.name}>
         <div className="lh-wrap">
           <div className="lh-hero">
             <div className="lh-hero-text">
@@ -176,7 +166,7 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
                 <ProjectLogo id="legalhub" />
                 <p className="lh-kicker">{c.ui.kicker}</p>
               </div>
-              <h1>LegalHub</h1>
+              <h1>{c.ui.name}</h1>
               <p className="lh-lead">{c.ui.lead}</p>
               <div className="lh-hero-actions">
                 <button className="lh-btn" onClick={() => go("demo")}>
@@ -278,7 +268,10 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
         lead={c.ui.chapters.demo.lead}
         tinted
       >
-        <Demo onShowCode={showCode} />
+        {/* the same frame as every other demo (cases.css) */}
+        <div className="case-demo">
+          <Demo />
+        </div>
         <p className="lh-footnote">{c.ui.demoNote}</p>
       </Chapter>
 
@@ -329,12 +322,6 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
           </div>
           <h3>{activeStage.title}</h3>
           <p>{activeStage.detail}</p>
-          {activeStage.code !== undefined && (
-            <button className="lh-link" onClick={() => showCode(activeStage.code!)}>
-              <span className="i-ph-code-bold" aria-hidden="true" />
-              {c.code[activeStage.code].label}
-            </button>
-          )}
         </article>
 
         {inside === "signing" && (
@@ -507,29 +494,6 @@ export default function LegalHubCase({ onBack }: { onBack: () => void }) {
             </li>
           ))}
         </ul>
-      </Chapter>
-
-      <Chapter
-        id="code"
-        n={7}
-        title={c.ui.chapters.code.title}
-        lead={c.ui.chapters.code.lead}
-        tinted
-      >
-        <div className="lh-code-tabs" role="tablist" aria-label={c.ui.codeTabs}>
-          {c.code.map((s, i) => (
-            <button
-              key={s.label}
-              role="tab"
-              aria-selected={code === i}
-              onClick={() => setCode(i)}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-        <p className="lh-code-explanation">{sampleText.explanation}</p>
-        <CodeBlock code={sample.code} language={sample.language} path={sample.path} />
       </Chapter>
 
       <footer className="lh-case-footer">

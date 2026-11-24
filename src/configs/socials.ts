@@ -15,7 +15,7 @@ export const SOCIALS: { id: SocialId; name: string; icon: string; brand: string 
   { id: "github", name: "GitHub", icon: "i-ph-github-logo-fill", brand: "#6e5494" }
 ];
 
-/** "https://www.instagram.com/yaraul228/" → "yaraul228" (for the Contact list and terminal). */
+/** "https://www.instagram.com/name/" → "name" (for the Contact list and terminal). */
 export function socialHandle(url: string) {
   try {
     const { pathname } = new URL(url);

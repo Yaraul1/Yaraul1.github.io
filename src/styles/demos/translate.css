@@ -1,0 +1,267 @@
+/* Document Translator: the scan in a viewer and the work panel next to it, then the
+   original and the translation side by side, with an edit on the page. Builds on
+   flow.css (.fd-*). The sheets stay paper-white in both themes. */
+
+/* ── result: original, translation, actions ── */
+.tr-result {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(240px, 0.8fr);
+  animation: fd-in 0.3s ease both;
+}
+.tr-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: var(--c-accent);
+}
+.tr-stages {
+  gap: 7px;
+}
+.tr-keeps {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 9px 11px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--c-text-2);
+  background: var(--c-success-soft);
+}
+.tr-keeps span {
+  flex: none;
+  font-size: 17px;
+  color: var(--c-success);
+}
+.tr-edit-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-text-2);
+}
+.tr-result-actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+.tr-result-actions .fd-btn {
+  justify-content: center;
+}
+.tr-progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-accent);
+}
+.tr-bar {
+  height: 6px;
+  margin: 0 0 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--c-sunken);
+}
+.tr-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--c-accent);
+  transition: width 0.4s ease;
+}
+
+/* ── the paper: A4-like, scaled with its frame (all sizes in cqi of the frame) ── */
+.tr-sheet-frame {
+  width: 100%;
+  container-type: inline-size;
+}
+/* as large as the viewer allows in both directions */
+.fd-viewer-stage > .tr-sheet-frame {
+  width: min(100%, calc(100cqh / 1.3));
+}
+.tr-sheet {
+  --ink: #1d1d1f;
+  --rule: #c9c9c9;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1.3;
+  margin: 0;
+  padding: 6.2cqi 6.7cqi 4.8cqi;
+  overflow: hidden;
+  border-radius: 1cqi;
+  color: var(--ink);
+  background: #fff;
+  box-shadow:
+    0 1px 2px #0000001f,
+    0 12px 30px -14px #00000066;
+  font-family: "PT Serif", Georgia, serif;
+}
+.tr-sheet-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 2cqi;
+  padding-bottom: 1.4cqi;
+  border-bottom: max(1px, 0.5cqi) solid var(--ink);
+  font-family: var(--font-ui);
+  font-size: 2.6cqi;
+  font-weight: 600;
+}
+.tr-sheet-title {
+  margin: 4.8cqi 0 3.3cqi;
+  font-size: 4.8cqi;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+.tr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: 2.9cqi;
+}
+.tr-table th,
+.tr-table td {
+  padding: 1.4cqi 2.1cqi;
+  border: 1px solid var(--ink);
+  text-align: left;
+  vertical-align: top;
+}
+.tr-table th {
+  width: 44%;
+  font-weight: 500;
+  background: #f1f1f1;
+}
+.tr-sheet-text {
+  margin: 3.8cqi 0 0;
+  font-family: var(--font-ui);
+  font-size: 2.9cqi;
+  line-height: 1.5;
+}
+.tr-sheet-foot {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4cqi 5.2cqi;
+  margin-top: auto;
+  padding-top: 2.4cqi;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-ui);
+  font-size: 2.7cqi;
+}
+.tr-sheet-note {
+  flex-basis: 100%;
+  margin-top: 1.4cqi;
+  font-size: 2.3cqi;
+  color: #777;
+}
+.tr-sign {
+  width: 16.7cqi;
+  height: 5.2cqi;
+  margin-left: 1cqi;
+  vertical-align: middle;
+  fill: none;
+  stroke: #1f3e9e;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+/* the seal is the same on both sheets: it is kept, not translated */
+.tr-seal {
+  position: absolute;
+  right: 1cqi;
+  bottom: 3.3cqi;
+  display: grid;
+  place-content: center;
+  width: 19cqi;
+  height: 19cqi;
+  border: 0.7cqi solid #d0312d;
+  border-radius: 50%;
+  color: #d0312d;
+  font-size: 2.4cqi;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  opacity: 0.85;
+  transform: rotate(-12deg);
+}
+.tr-seal span:last-child {
+  font-size: 4cqi;
+}
+/* a scanning line runs over the page while it's processed */
+.tr-scan {
+  position: absolute;
+  top: -21cqi;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 21cqi;
+  background: linear-gradient(180deg, transparent, #2462cf2e 70%, #2462cf99 100%);
+  pointer-events: none;
+  animation: tr-scan 1.6s ease-in-out infinite;
+}
+
+/* ── editing on the page ── */
+.tr-cap.is-editable {
+  border-radius: 3px;
+  outline: 1px dashed #2462cf80;
+  outline-offset: 2px;
+  cursor: text;
+}
+.tr-cap.is-editable:hover,
+.tr-cap.is-editable:focus-visible {
+  background: #2462cf14;
+  outline-style: solid;
+}
+.tr-cap.is-suggested {
+  background: #f2c94c55;
+  outline-color: #c98a00;
+}
+.tr-cap.is-fixed {
+  background: #2e7a4c1f;
+}
+.tr-edit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4cqi;
+}
+.tr-edit input {
+  flex: 1;
+  min-width: 30cqi;
+  padding: 1.2cqi 1.9cqi;
+  border: 1px solid #2462cf;
+  border-radius: 1.4cqi;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
+.tr-edit .fd-btn {
+  padding: 1.2cqi 2.4cqi;
+  font-size: max(11px, 2.9cqi);
+}
+.tr-edit .fd-btn.is-ghost {
+  color: var(--ink);
+}
+
+@keyframes tr-scan {
+  from {
+    top: -21cqi;
+  }
+  to {
+    top: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tr-scan,
+  .tr-result {
+    animation: none;
+  }
+  .tr-scan {
+    display: none;
+  }
+}
+
+/* ── narrow demo frame ── */
+@container demo (max-width: 760px) {
+  .tr-result {
+    grid-template-columns: 1fr;
+  }
+  .fd-viewer-stage > .tr-sheet-frame {
+    width: min(100%, 420px);
+  }
+}

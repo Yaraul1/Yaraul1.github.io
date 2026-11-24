@@ -1,0 +1,322 @@
+/* Tenders & Mail: one card at a time, accept or reject. Builds on flow.css (.fd-*). */
+
+.td-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── queues ── */
+.td-side {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 10px;
+  border-right: 1px solid var(--c-line);
+  background: var(--c-sunken);
+}
+.td-queue {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--c-text-2);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.td-queue:hover {
+  background: var(--c-hover);
+}
+.td-queue:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 1px;
+}
+.td-queue.is-active {
+  color: var(--c-text);
+  font-weight: 600;
+  background: var(--c-raised);
+  box-shadow: var(--shadow-card);
+}
+.td-queue > span:first-child {
+  font-size: 17px;
+}
+.td-queue-name {
+  flex: 1;
+}
+.td-queue-n {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--c-text-2);
+  background: var(--c-raised);
+}
+.td-queue-n.is-hot {
+  color: var(--c-accent-text);
+  background: var(--c-accent);
+}
+
+/* ── the card ── */
+.td-main {
+  min-height: 0;
+  overflow: auto;
+  overflow-x: hidden;
+}
+/* the card takes the whole working area, like a page of the app */
+.td-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 22px 26px 20px;
+  background: var(--c-bg);
+  animation: td-in 0.3s ease both;
+  transition:
+    transform 0.32s ease,
+    opacity 0.32s ease;
+}
+.td-card.is-leaving-take {
+  transform: translateX(60px) rotate(1.5deg);
+  opacity: 0;
+}
+.td-card.is-leaving-reject {
+  transform: translateX(-60px) rotate(-1.5deg);
+  opacity: 0;
+}
+.td-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.td-card-title {
+  flex: 1;
+  min-width: 0;
+}
+.td-card-kind {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--c-text-3);
+}
+.td-card-title h3 {
+  margin: 4px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.td-card-count {
+  flex: none;
+  font-size: 12px;
+  color: var(--c-text-3);
+}
+.td-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 16px 0 0;
+}
+.td-facts dt {
+  font-size: 12px;
+  color: var(--c-text-3);
+}
+.td-facts dd {
+  margin: 2px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.td-ai {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 6px;
+  padding: 8px 11px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: var(--c-text-2);
+  background: var(--c-accent-soft);
+}
+.td-ai > span:first-child {
+  color: var(--c-accent);
+}
+.td-ai b {
+  color: var(--c-text);
+}
+.td-card .fd-sub {
+  margin-top: 14px;
+}
+.td-items,
+.td-files {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.td-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 14px;
+  border-bottom: 1px dashed var(--c-line);
+}
+.td-items .fd-qty {
+  flex: none;
+  white-space: nowrap;
+}
+.td-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.td-files li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--c-text-2);
+  background: var(--c-raised);
+}
+.td-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--c-line);
+}
+.td-actions .fd-btn {
+  padding: 9px 18px;
+  font-size: 14px;
+}
+/* ── lists and the end ── */
+.td-list-panel {
+  max-width: none;
+  margin: 18px;
+}
+.td-empty {
+  margin: 0;
+  padding: 18px 16px;
+  font-size: 14px;
+  color: var(--c-text-3);
+}
+.td-checking {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--c-text-3);
+}
+.td-send {
+  padding: 6px 12px;
+  font-size: 12.5px;
+}
+.td-verdict {
+  flex: none;
+  animation: fd-in 0.3s ease both;
+}
+.td-spin {
+  animation: td-spin 0.9s linear infinite;
+}
+.td-done {
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 28px 24px;
+  text-align: center;
+}
+.td-done-icon {
+  font-size: 38px;
+  color: var(--c-success);
+}
+.td-done h3 {
+  margin: 8px 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.td-done p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--c-text-2);
+}
+.td-done-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@keyframes td-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes td-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .td-card {
+    animation: none;
+    transition: none;
+  }
+  .td-spin {
+    animation: none;
+  }
+}
+
+/* ── narrow demo frame ── */
+@container demo (max-width: 760px) {
+  .td-layout {
+    grid-template-columns: 1fr;
+  }
+  .td-side {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 8px;
+    border-right: 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .td-queue {
+    flex: none;
+  }
+  .td-card {
+    padding: 16px;
+  }
+  .td-list-panel {
+    margin: 12px;
+  }
+  .td-actions .fd-btn {
+    flex: 1;
+    justify-content: center;
+  }
+  /* the button or the verdict drops under the title */
+  .td-list-panel .fd-row {
+    flex-wrap: wrap;
+  }
+  .td-list-panel .fd-row-main {
+    flex-basis: calc(100% - 44px);
+  }
+  .td-list-panel .td-send,
+  .td-list-panel .td-checking,
+  .td-list-panel .td-verdict {
+    margin-left: 44px;
+  }
+}

@@ -1,9 +1,20 @@
 import "~/styles/cases.css";
 
 /**
- * A project's own icon, as it appears in that project's app (files in public/projects,
- * taken from each repository). Decorative: the project's name is always next to it.
+ * A project's mark, drawn for this site: the same rounded tile for every project, in the
+ * project's own colour, with a glyph from the site's icon set (Phosphor, MIT). The
+ * projects' real logos belong to their owners and are not used here. Decorative: the
+ * project's name is always next to it.
  */
+const GLYPH: Record<string, string> = {
+  spider: "i-ph-binoculars-fill",
+  filter: "i-ph-funnel-fill",
+  translator: "i-ph-translate-bold",
+  legalhub: "i-ph-signature-bold",
+  transcriber: "i-ph-waveform-bold",
+  bonadi: "i-ph-yarn-fill"
+};
+
 export default function ProjectLogo({
   id,
   className = ""
@@ -11,34 +22,11 @@ export default function ProjectLogo({
   id: string;
   className?: string;
 }) {
-  const cls = `plogo plogo-${id} ${className}`;
-  switch (id) {
-    case "spider":
-      // a one-colour glyph: drawn as a mask, so it sits on a tile like the others
-      return (
-        <span className={cls} aria-hidden="true">
-          <i />
-        </span>
-      );
-    case "transcriber":
-      // the transcriber's sidebar mark: a waveform on a blue tile
-      return (
-        <span className={cls} aria-hidden="true">
-          <span className="i-ph-waveform-bold" />
-        </span>
-      );
-    case "bonadi":
-      return (
-        <span className={`${cls} is-wide`} aria-hidden="true">
-          <img src="/projects/bonadi.webp" alt="" draggable={false} />
-        </span>
-      );
-    case "filter":
-      return <img className={cls} src="/projects/filter.svg" alt="" draggable={false} />;
-    case "translator":
-    case "legalhub":
-      return <img className={cls} src={`/projects/${id}.png`} alt="" draggable={false} />;
-    default:
-      return null;
-  }
+  const glyph = GLYPH[id];
+  if (!glyph) return null;
+  return (
+    <span className={`plogo plogo-${id} ${className}`} aria-hidden="true">
+      <span className={glyph} />
+    </span>
+  );
 }

@@ -1,9 +1,5 @@
-import type { CSSProperties } from "react";
 import type { ArtKind } from "./types";
 import "~/styles/cases.css";
-
-const at = (x: number, y: number, extra: Record<string, number | string> = {}) =>
-  ({ "--x": `${x}%`, "--y": `${y}%`, ...extra }) as CSSProperties;
 
 /** Waveform bar heights for the transcriber, in % of the wave box. */
 const WAVE = [
@@ -19,31 +15,28 @@ export default function CaseArt({ kind }: { kind: ArtKind }) {
     <div className={`case-art art-${kind}`} aria-hidden="true">
       {kind === "spider" && (
         <>
-          <div className="art-radar">
+          {/* a letter with a digest becomes separate tenders, each with its status */}
+          <div className="art-sheet art-letter">
+            <span className="art-envelope">
+              <span className="i-ph-envelope-simple-fill" />
+            </span>
             <i />
             <i />
             <i />
-            <span className="art-sweep" />
+            <i />
           </div>
-          {[
-            [28, 34, 0],
-            [66, 26, 0.4],
-            [72, 62, 0.9],
-            [36, 70, 1.3],
-            [52, 46, 1.8]
-          ].map(([x, y, d]) => (
-            <b
-              key={`${x}-${y}`}
-              className="art-pin"
-              style={at(x, y, { "--d": `${d}s` })}
-            />
-          ))}
-          <span className="art-mail">
-            <span className="i-ph-envelope-simple-fill" />
+          <span className="art-arrow">
+            <span className="i-ph-arrow-right-bold" />
           </span>
-          <span className="art-tag">
-            <span className="i-ph-funnel-simple-bold" />
-          </span>
+          <div className="art-tenders">
+            {["is-new", "is-work", "is-done"].map((state) => (
+              <div className={`art-sheet art-tender ${state}`} key={state}>
+                <b />
+                <i />
+                <i />
+              </div>
+            ))}
+          </div>
         </>
       )}
 
@@ -119,7 +112,7 @@ export default function CaseArt({ kind }: { kind: ArtKind }) {
         <>
           <div className="art-knit" />
           <div className="art-brand">
-            <img src="/projects/bonadi.webp" alt="" draggable={false} />
+            <strong>BONADI</strong>
           </div>
         </>
       )}
