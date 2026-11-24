@@ -7,9 +7,6 @@ dist/
 .sites-runtime/
 .sites-checkout/
 
-# personal files: the CV stays local; the "Download CV" button shows only where the file is
-public/resume/
-
 # local tooling, not part of the site
 .agents/
 .openai/
