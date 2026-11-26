@@ -107,8 +107,8 @@ function aboutScroller(from: HTMLElement) {
 }
 
 /**
- * The resume sits under the fold of "About me" and nothing hinted at it. A pulsing pill at the
- * bottom says so and scrolls to it; if nothing happens for 5 s, a drawn cursor comes to the pill
+ * The resume sits under the fold of "About me" and nothing hinted at it. A pulsing round button
+ * at the bottom right scrolls to it; if nothing happens for 5 s, a drawn cursor comes to it
  * and scrolls a little by itself, once. It goes away as soon as the window is scrolled.
  */
 function ScrollHint() {
@@ -116,8 +116,6 @@ function ScrollHint() {
   const dock = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
   const [cursor, setCursor] = useState(false);
-  // a round arrow instead of the pill when the buttons leave no room next to it
-  const [compact, setCompact] = useState(false);
   useEffect(() => {
     const el = dock.current;
     const app = el?.closest<HTMLElement>(".profile-app");
@@ -132,17 +130,7 @@ function ScrollHint() {
       if (!s) return;
       const more = s.scrollTop < 40 && s.scrollHeight - s.clientHeight > 80;
       setShown(more);
-      // the hint sits 20–60px above the bottom, at the right: does the row of buttons reach there?
-      const row = s.querySelector(".profile-actions");
-      if (row) {
-        const box = s.getBoundingClientRect();
-        const items = [...row.children].map((c) => c.getBoundingClientRect());
-        const right = Math.max(...items.map((r) => r.right));
-        const bottom = Math.max(...items.map((r) => r.bottom));
-        const sameBand = bottom > box.bottom - 64;
-        setCompact(sameBand && box.right - right < 210);
-      }
-      // the nudge happens once: back at the top, the pill comes back without the cursor
+      // the nudge happens once: back at the top, the button comes back without the cursor
       if (!more) setCursor(false);
     };
     // 5 s without a scroll, click or key: the cursor shows where to go and scrolls a bit
@@ -199,13 +187,12 @@ function ScrollHint() {
     <div className="scroll-hint-dock" ref={dock}>
       {shown && (
         <button
-          className={`scroll-hint ${compact ? "is-compact" : ""}`}
+          className="scroll-hint"
           onClick={go}
           aria-label={t.profile.scrollHint}
           title={t.profile.scrollHint}
         >
-          {!compact && t.profile.scrollHint}
-          {/* three chevrons that light up in turn, top to bottom */}
+          {/* always the round button, the words are in the tooltip; three chevrons that light up in turn, top to bottom */}
           <svg className="scroll-hint-arrows" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M7 5.5l5 4 5-4" />
             <path d="M7 10l5 4 5-4" />

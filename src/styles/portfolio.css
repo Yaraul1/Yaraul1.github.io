@@ -840,24 +840,20 @@ h2 {
   height: 0;
   pointer-events: none;
 }
+/* a round button, filled like the main one so it doesn't read as a profile link */
 .scroll-hint {
   position: relative;
-  top: -60px;
+  top: -56px;
   right: -12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 40px;
-  padding: 0 16px 0 18px;
-  border: 1px solid var(--c-line-strong);
-  border-radius: 999px;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--c-text);
-  background: color-mix(in srgb, var(--c-raised) 90%, transparent);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--c-accent);
+  border-radius: 50%;
+  color: var(--c-accent-text);
+  background: var(--c-accent);
   box-shadow: var(--shadow-card);
   pointer-events: auto;
   cursor: pointer;
@@ -865,24 +861,8 @@ h2 {
     hint-in 0.4s ease both,
     hint-pulse 2s ease-out 0.6s infinite;
 }
-/* the round version: filled like the main button, so it doesn't read as a profile link */
-.scroll-hint.is-compact {
-  top: -56px;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  justify-content: center;
-  border-color: var(--c-accent);
-  color: var(--c-accent-text);
-  background: var(--c-accent);
-}
-.scroll-hint.is-compact .scroll-hint-arrows {
-  width: 22px;
-  height: 22px;
-  color: inherit;
-}
 .scroll-hint:hover {
-  border-color: var(--c-accent);
+  background: var(--c-accent-hover);
 }
 .scroll-hint:focus-visible {
   outline: 2px solid var(--c-accent);
@@ -892,15 +872,13 @@ h2 {
    they light up one after another, top to bottom, like a wave going down */
 .scroll-hint-arrows {
   display: block;
-  flex: none;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  color: var(--c-accent);
 }
 .scroll-hint-arrows path {
   opacity: 0.25;
@@ -922,7 +900,7 @@ h2 {
     opacity: 1;
   }
 }
-/* the drawn cursor of the 5-second nudge: comes in from the side, presses the pill */
+/* the drawn cursor of the 5-second nudge: comes in from the side, presses the button */
 .scroll-hint-cursor {
   position: absolute;
   top: 55%;
