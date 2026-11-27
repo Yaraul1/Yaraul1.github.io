@@ -108,12 +108,12 @@ function aboutScroller(from: HTMLElement) {
 
 /**
  * The resume sits under the fold of "About me" and nothing hinted at it. A pulsing round button
- * at the bottom right scrolls to it; if nothing happens for 5 s, a drawn cursor comes to it
+ * at the end of the row of buttons (so it lines up with them in any language) scrolls to it; if nothing happens for 5 s, a drawn cursor comes to it
  * and scrolls a little by itself, once. It goes away as soon as the window is scrolled.
  */
 function ScrollHint() {
   const t = useT();
-  const dock = useRef<HTMLDivElement>(null);
+  const dock = useRef<HTMLSpanElement>(null);
   const [shown, setShown] = useState(false);
   const [cursor, setCursor] = useState(false);
   useEffect(() => {
@@ -184,30 +184,30 @@ function ScrollHint() {
   };
 
   return (
-    <div className="scroll-hint-dock" ref={dock}>
-      {shown && (
-        <button
-          className="scroll-hint"
-          onClick={go}
-          aria-label={t.profile.scrollHint}
-          title={t.profile.scrollHint}
-        >
-          {/* always the round button, the words are in the tooltip; three chevrons that light up in turn, top to bottom */}
-          <svg className="scroll-hint-arrows" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M7 5.5l5 4 5-4" />
-            <path d="M7 10l5 4 5-4" />
-            <path d="M7 14.5l5 4 5-4" />
-          </svg>
-          {cursor && (
-            <span className="scroll-hint-cursor" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M5 2.5l13.5 9.3-6 1.2 3.8 7.4-2.9 1.5-3.8-7.5L5 19z" />
-              </svg>
-            </span>
-          )}
-        </button>
-      )}
-    </div>
+    // always in the row, only faded out once scrolled: the row never jumps
+    <span className="scroll-hint-slot" ref={dock}>
+      <button
+        className={`scroll-hint ${shown ? "" : "is-hidden"}`}
+        onClick={go}
+        aria-label={t.profile.scrollHint}
+        title={t.profile.scrollHint}
+        tabIndex={shown ? undefined : -1}
+      >
+        {/* the words are in the tooltip; three chevrons light up in turn, top to bottom */}
+        <svg className="scroll-hint-arrows" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 5.5l5 4 5-4" />
+          <path d="M7 10l5 4 5-4" />
+          <path d="M7 14.5l5 4 5-4" />
+        </svg>
+        {cursor && (
+          <span className="scroll-hint-cursor" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M5 2.5l13.5 9.3-6 1.2 3.8 7.4-2.9 1.5-3.8-7.5L5 19z" />
+            </svg>
+          </span>
+        )}
+      </button>
+    </span>
   );
 }
 
@@ -369,6 +369,7 @@ export function Profile() {
             </a>
           )}
           <SocialLinks />
+          <ScrollHint />
         </div>
         <AboutResume />
         <div className="profile-footer">
@@ -377,7 +378,6 @@ export function Profile() {
             {t.profile.tryTerminal} <span>⌘</span>
           </button>
         </div>
-        <ScrollHint />
       </section>
     </main>
   );

@@ -827,24 +827,14 @@ h2 {
   overflow: auto;
   padding: 52px 52px 28px;
 }
-/* "Resume below": pinned to the bottom of the visible part of "About me" (a zero-height
-   sticky dock at the end of the column), gone once the window is scrolled */
-.scroll-hint-dock {
-  position: sticky;
-  bottom: 0;
-  z-index: 3;
+/* "Resume below": the last item of the row of buttons, pushed to its right end */
+.scroll-hint-slot {
   display: flex;
-  flex: none;
-  /* bottom right: the buttons above it are left-aligned, so it covers nothing */
-  justify-content: flex-end;
-  height: 0;
-  pointer-events: none;
+  margin-left: auto;
 }
 /* a round button, filled like the main one so it doesn't read as a profile link */
 .scroll-hint {
   position: relative;
-  top: -56px;
-  right: -12px;
   display: grid;
   place-items: center;
   width: 36px;
@@ -857,9 +847,20 @@ h2 {
   box-shadow: var(--shadow-card);
   pointer-events: auto;
   cursor: pointer;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s;
   animation:
     hint-in 0.4s ease both,
     hint-pulse 2s ease-out 0.6s infinite;
+}
+.scroll-hint.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s 0.25s;
 }
 .scroll-hint:hover {
   background: var(--c-accent-hover);
